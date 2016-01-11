@@ -44,6 +44,12 @@ namespace CasualMeter.Common.Entities
         public bool UseGlobalHotkeys { get; set; }
 
         [DefaultValue(false)]
+        public bool OnlyBosses { get; set; }
+
+        [DefaultValue(true)]
+        public bool IgnoreOneshots { get; set; }
+
+        [DefaultValue(false)]
         public bool UseRawSockets { get; set; }
 
         [DefaultValue(null)]

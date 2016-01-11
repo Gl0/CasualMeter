@@ -1,6 +1,0 @@
-131130;Spring Attack XI;Chained
-131100;Spring Attack XI;Unchained
-250730;Wallop VII;Chained
-250700;Wallop VII;Unchained
-30830;Onslaught VIII;Chained
-30800;Onslaught VIII;Unchained

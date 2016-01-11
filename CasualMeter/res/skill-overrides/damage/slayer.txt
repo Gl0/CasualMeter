@@ -1,8 +1,0 @@
-80900;Overhand Strike IX;Unchained
-80930;Overhand Strike IX;Chained
-230200;Measured Slice II;Unchained
-230230;Measured Slice II;Chained
-240100;Eviscerate;Unchained
-240130;Eviscerate;Chained
-250100;Ultimate Overhand Strike I;Unchained
-250130;Ultimate Overhand Strike I;Chained

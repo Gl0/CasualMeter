@@ -56,6 +56,8 @@ namespace CasualMeter
             OpacityScaleSlider.Value = SettingsHelper.Instance.Settings.Opacity;
             UiScaleSlider.Value = SettingsHelper.Instance.Settings.UiScale;
             ShellViewModel.IsPinned = SettingsHelper.Instance.Settings.IsPinned;
+            ShellViewModel.OnlyBosses = SettingsHelper.Instance.Settings.OnlyBosses;
+            ShellViewModel.IgnoreOneshots = SettingsHelper.Instance.Settings.IgnoreOneshots;
             ProcessHelper.Instance.UpdateHotKeys();
 
             base.OnInitialized(e);

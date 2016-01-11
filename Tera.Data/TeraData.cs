@@ -13,10 +13,12 @@ namespace Tera.Data
         public Region Region { get; private set; }
         public OpCodeNamer OpCodeNamer { get; private set; }
         public SkillDatabase SkillDatabase { get; private set; }
+        public NpcDatabase NpcDatabase { get; private set; }
 
         internal TeraData(BasicTeraData basicData, string region)
         {
             SkillDatabase = new SkillDatabase(basicData.ResourceDirectory);
+            NpcDatabase = new NpcDatabase(Path.Combine(basicData.ResourceDirectory, "npc-RU.txt"));
             OpCodeNamer = new OpCodeNamer(Path.Combine(basicData.ResourceDirectory, $"opcodes-{region}.txt"));
         }
     }

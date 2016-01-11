@@ -96,6 +96,37 @@ namespace CasualMeter
                 });
             }
         }
+        public bool OnlyBosses
+        {
+            get { return GetProperty(getDefault: () => SettingsHelper.Instance.Settings.OnlyBosses); }
+            set
+            {
+                SetProperty(value, onChanged: e =>
+                {
+                    SettingsHelper.Instance.Settings.OnlyBosses = value;
+                    if (DamageTracker != null)
+                    {
+                        DamageTracker.OnlyBosses = value;
+                    }
+                });
+            }
+        }
+
+        public bool IgnoreOneshots
+        {
+            get { return GetProperty(getDefault: () => SettingsHelper.Instance.Settings.IgnoreOneshots); }
+            set
+            {
+                SetProperty(value, onChanged: e =>
+                {
+                    SettingsHelper.Instance.Settings.IgnoreOneshots = value;
+                    if (DamageTracker != null)
+                    {
+                        DamageTracker.IgnoreOneshots = value;
+                    }
+                });
+            }
+        }
 
         public bool ShowCompactView => UseCompactView || (SettingsHelper.Instance.Settings.ExpandedViewPlayerLimit > 0 
                                                           && PlayerCount > SettingsHelper.Instance.Settings.ExpandedViewPlayerLimit);
@@ -224,12 +255,14 @@ namespace CasualMeter
             Server = server;
             _teraData = BasicTeraData.DataForRegion(server.Region);
 
-            _entityTracker = new EntityTracker();
+            _entityTracker = new EntityTracker(_teraData.NpcDatabase);
             _playerTracker = new PlayerTracker(_entityTracker);
             _messageFactory = new MessageFactory(_teraData.OpCodeNamer);
 
             ResetDamageTracker();
             DamageTracker = DamageTracker ?? new DamageTracker();
+            DamageTracker.OnlyBosses = OnlyBosses;
+            DamageTracker.IgnoreOneshots = IgnoreOneshots;
 
             Logger.Info($"Connected to server {server.Name}.");
         }
@@ -251,6 +284,8 @@ namespace CasualMeter
             }
 
             DamageTracker = new DamageTracker();
+            DamageTracker.OnlyBosses = OnlyBosses;
+            DamageTracker.IgnoreOneshots = IgnoreOneshots;
         }
 
         private void HandleMessageReceived(Message obj)
@@ -267,7 +302,7 @@ namespace CasualMeter
             }
             if (!DamageTracker.IsArchived && skillResultMessage.IsValid(DamageTracker)) //don't process while viewing a past encounter
             {
-                var skillResult = new SkillResult(skillResultMessage, _entityTracker, _playerTracker, _teraData.SkillDatabase);
+                var skillResult = new SkillResult(skillResultMessage, _entityTracker, _playerTracker, _teraData.SkillDatabase,_teraData.NpcDatabase);
                 DamageTracker.Update(skillResult);
                 if (!skillResult.IsHeal && skillResult.Amount > 0)
                     _inactivityTimer.Restart();

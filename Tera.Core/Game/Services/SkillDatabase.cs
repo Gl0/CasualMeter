@@ -13,7 +13,7 @@ namespace Tera.Game
     // Currently this is limited to the name of the skill
     public class SkillDatabase
     {
-        private readonly Dictionary<RaceGenderClass, List<UserSkill>> _userSkilldata = new Dictionary<RaceGenderClass, List<UserSkill>>();
+        private readonly Dictionary<RaceGenderClass, Dictionary<int, UserSkill>> _userSkilldata = new Dictionary<RaceGenderClass, Dictionary<int, UserSkill>>();
         private readonly Dictionary<PlayerClass, List<Skill>> _damageSkillIdOverrides = new Dictionary<PlayerClass, List<Skill>>();
         private readonly Dictionary<PlayerClass, List<Skill>> _healSkillIdOverrides = new Dictionary<PlayerClass, List<Skill>>();
 
@@ -26,13 +26,13 @@ namespace Tera.Game
         private void InitializeSkillDatabase(string filename)
         {
             var lines = File.ReadLines(filename);
-            var listOfParts = lines.Select(s => s.Split(new[] { ' ' }, 5));
+            var listOfParts = lines.Select(s => s.Split(new[] { '\t' }, 7));
             foreach (var parts in listOfParts)
             {
-                var skill = new UserSkill(int.Parse(parts[0]), new RaceGenderClass(parts[1], parts[2], parts[3]), parts[4]);
+                var skill = new UserSkill(int.Parse(parts[0]), new RaceGenderClass(parts[1], parts[2], parts[3]), parts[4], parts[5] == "" ? false:bool.Parse(parts[5]),parts[6]);
                 if (!_userSkilldata.ContainsKey(skill.RaceGenderClass))
-                    _userSkilldata[skill.RaceGenderClass] = new List<UserSkill>();
-                _userSkilldata[skill.RaceGenderClass].Add(skill);
+                    _userSkilldata[skill.RaceGenderClass] = new Dictionary<int, UserSkill>();
+                _userSkilldata[skill.RaceGenderClass].Add(skill.Id,skill);
             }
         }
 
@@ -105,16 +105,10 @@ namespace Tera.Game
                 if (!_userSkilldata.ContainsKey(rgc2))
                     continue;
 
-                var searchSkill = new UserSkill(skillId, raceGenderClass, null);
-
-                var index = _userSkilldata[rgc2].BinarySearch(searchSkill, comparer);
-                if (index < 0)
-                    index = ~index - 1;
-                if (index < 0)
-                    continue;
-
-                var item = _userSkilldata[rgc2][index];
-                return item;
+                UserSkill skill;
+                if (!_userSkilldata[rgc2].TryGetValue(skillId, out skill))
+                     continue;
+                return skill;
             }
             return null;
         }

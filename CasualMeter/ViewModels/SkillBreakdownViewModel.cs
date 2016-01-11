@@ -156,7 +156,7 @@ namespace CasualMeter.ViewModels
             }
             
             var aggregatedById =(from s in SkillLog.Where(skill => !SkillIsAttackDictionary[skill.SkillName] || skill.Amount > 0)
-                                 group s by new { s.SkillId , s.SkillName } into grps
+                                 group s by new { s.SkillId , s.SkillName, s.IsHeal } into grps
                                  select new AggregatedSkillResult
                                  {
                                      DisplayName = grps.FirstOrDefault()?.SkillNameDetailed ?? "Unknown Skill",
@@ -172,10 +172,10 @@ namespace CasualMeter.ViewModels
                                  }).ToList();
 
             var aggregatedByName =  (from s in SkillLog.Where(skill => !SkillIsAttackDictionary[skill.SkillName] || skill.Amount > 0)
-                                     group s by s.SkillName into grps
+                                     group s by new { s.SkillName, s.IsHeal } into grps
                                      select new AggregatedSkillResult
                                      {
-                                         DisplayName = grps.Key,
+                                         DisplayName = grps.FirstOrDefault()?.SkillName,
                                          Amount = grps.Sum(g => g.Amount),
                                          IsHeal = grps.FirstOrDefault()?.IsHeal,
                                          Hits = grps.Count(),

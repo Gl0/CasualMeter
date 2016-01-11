@@ -10,6 +10,7 @@ using System.Reflection;
 using log4net;
 using Lunyx.Common.UI.Wpf;
 using Nicenis.ComponentModel;
+using Tera.Game;
 
 namespace Tera.DamageMeter
 {
@@ -21,6 +22,17 @@ namespace Tera.DamageMeter
         public ThreadSafeObservableCollection<PlayerInfo> StatsByUser
         {
             get { return GetProperty(getDefault: () => new ThreadSafeObservableCollection<PlayerInfo>()); }
+            set { SetProperty(value); }
+        }
+
+        public bool OnlyBosses {
+            get { return GetProperty<bool>(getDefault: () => false); }
+            set { SetProperty(value); }
+        }
+
+        public bool IgnoreOneshots
+        {
+            get { return GetProperty<bool>(getDefault: () => true); }
             set { SetProperty(value); }
         }
 
@@ -65,9 +77,20 @@ namespace Tera.DamageMeter
             get { return GetProperty(getDefault: () => new SkillStats()); }
             set { SetProperty(value); }
         }
-        
+
         private PlayerInfo GetOrCreate(SkillResult skillResult)
         {
+            /// not count bosses
+            NpcEntity npctarget = skillResult.Target as NpcEntity;
+            if (npctarget != null)
+            {
+                if (OnlyBosses) /// not count bosses
+                    if (!npctarget.Info.Boss)
+                        return null;
+                if (IgnoreOneshots) /// ignore damage that is more than 10x times than mob's hp
+                    if ((npctarget.Info.HP>0) && (npctarget.Info.HP * 10 <= skillResult.Damage))
+                        return null;
+            }
             var player = skillResult.SourcePlayer;
             PlayerInfo playerStats = StatsByUser.FirstOrDefault(pi => pi.Player.Equals(player));
             if (playerStats == null && (IsFromHealer(skillResult) ||//either healer
@@ -126,7 +149,7 @@ namespace Tera.DamageMeter
             var result = new SkillStats();
             if (message.Amount == 0)
                 return result;
-
+            
             result.Damage = message.Damage;
             result.Heal = message.Heal;
 

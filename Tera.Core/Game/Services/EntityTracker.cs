@@ -14,6 +14,13 @@ namespace Tera.Game
         private readonly Dictionary<EntityId, Entity> _dictionary = new Dictionary<EntityId, Entity>();
         public event Action<Entity> EntityUpdated;
 
+        private readonly NpcDatabase _npcDatabase;
+
+        public EntityTracker(NpcDatabase npcDatabase)
+        {
+            _npcDatabase = npcDatabase;
+        }
+
         protected virtual void OnEntityUpdated(Entity entity)
         {
             Action<Entity> handler = EntityUpdated;
@@ -25,7 +32,7 @@ namespace Tera.Game
             Entity newEntity = null;
             message.On<SpawnUserServerMessage>(m => newEntity = new UserEntity(m));
             message.On<LoginServerMessage>(m => newEntity = new UserEntity(m));
-            message.On<SpawnNpcServerMessage>(m => newEntity = new NpcEntity(m.Id, m.OwnerId, GetOrPlaceholder(m.OwnerId)));
+            message.On<SpawnNpcServerMessage>(m => newEntity = new NpcEntity(m.Id, m.OwnerId, GetOrPlaceholder(m.OwnerId), _npcDatabase.GetOrPlaceholder(m.HuntingZoneId, m.TemplateId)));
             message.On<SpawnProjectileServerMessage>(m => newEntity = new ProjectileEntity(m.Id, m.OwnerId, GetOrPlaceholder(m.OwnerId)));
             message.On<StartUserProjectileServerMessage>(m => newEntity = new ProjectileEntity(m.Id, m.OwnerId, GetOrPlaceholder(m.OwnerId)));
             if (newEntity != null)

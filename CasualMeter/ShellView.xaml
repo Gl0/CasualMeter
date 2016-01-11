@@ -152,6 +152,28 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0">Count only bosses</TextBlock>
+                        <CheckBox Grid.Column="1" x:Name="OnlyBossesCheckBox"
+                                  IsChecked="{Binding OnlyBosses}"
+                                  HorizontalAlignment="Right"
+                                  Margin="0,6,1,0"/>
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0">Ignore oneshots (>10x mob hp)</TextBlock>
+                        <CheckBox Grid.Column="1" x:Name="IgnoreOneshotsCheckBox"
+                                  IsChecked="{Binding IgnoreOneshots}"
+                                  HorizontalAlignment="Right"
+                                  Margin="0,6,1,0"/>
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0">Use Raw Sockets instead of WinPcap</TextBlock>
                         <CheckBox Grid.Column="1" x:Name="UseRawSocketsCheckBox"
                                   IsChecked="{Binding UseRawSockets}"

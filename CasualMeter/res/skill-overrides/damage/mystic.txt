@@ -1,5 +1,0 @@
-420120;Boomerang Pulse - Damage
-67044429;Thrall of Protection XVI
-67044430;Thrall of Something
-67044431;Thrall of Wrath VII
-67044432;Thrall of Vengeance XIV

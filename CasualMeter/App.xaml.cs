@@ -10,7 +10,6 @@ using System.Windows.Threading;
 using CasualMeter.Common.Helpers;
 using log4net;
 using Lunyx.Common.UI.Wpf;
-using Squirrel;
 
 namespace CasualMeter
 {
@@ -29,9 +28,6 @@ namespace CasualMeter
         {
             if (SingleInstance<App>.InitializeAsFirstInstance(Unique))
             {
-#if !DEBUG
-                Update().Wait();
-#endif
                 Logger.Info("Starting up.");
                 // Initialize process helper
                 ProcessHelper.Instance.Initialize();
@@ -54,37 +50,7 @@ namespace CasualMeter
             }
         }
 
-        private static async Task Update()
-        {
-            try
-            {
-                using (var mgr = new UpdateManager("http://lunyx.net/CasualMeter"))
-                {
-                    Logger.Info("Checking for updates.");
-                    if (mgr.IsInstalledApp)
-                    {
-                        Logger.Info($"Current Version: v{mgr.CurrentlyInstalledVersion()}");
-                        var updates = await mgr.CheckForUpdate();
-                        if (updates.ReleasesToApply.Any())
-                        {
-                            Logger.Info("Updates found. Applying updates.");
-                            var release = await mgr.UpdateApp();
-
-                            MessageBox.Show(CleanReleaseNotes(release.GetReleaseNotes(Path.Combine(mgr.RootAppDirectory, "packages"))),
-                                $"Casual Meter Update - v{release.Version}");
-
-                            Logger.Info("Updates applied. Restarting app.");
-                            UpdateManager.RestartApp();
-                        }
-                    }
-                }
-            }
-            catch (Exception e)
-            {   //log exception and move on
-                HandleException(e);
-            }
-        }
-
+ 
         private static void HandleException(Exception e)
         {
             if (e == null) return;

@@ -8,12 +8,13 @@ namespace Tera.Game
         public int Id { get; private set; }
         public string Name { get; private set; }
         public bool? IsChained { get; private set; }
-        
-        internal Skill(int id, string name, bool? isChained = null)
+        public string Detail { get; private set; }
+        internal Skill(int id, string name, bool? isChained = null, string detail = "")
         {
             Id = id;
             Name = name;
             IsChained = isChained;
+            Detail = detail;
         }
     }
 
@@ -21,8 +22,8 @@ namespace Tera.Game
     {
         public RaceGenderClass RaceGenderClass { get; private set; }
 
-        public UserSkill(int id, RaceGenderClass raceGenderClass, string name)
-            : base(id, name)
+        public UserSkill(int id, RaceGenderClass raceGenderClass, string name, bool? isChained=null,string detail="")
+            : base(id, name,isChained,detail)
         {
             RaceGenderClass = raceGenderClass;
         }

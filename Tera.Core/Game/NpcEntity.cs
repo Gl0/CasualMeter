@@ -10,12 +10,14 @@ namespace Tera.Game
     {
         public EntityId OwnerId { get; private set; }
         public Entity Owner { get; private set; }
+        public NpcInfo Info { get; private set; }
 
-        public NpcEntity(EntityId id, EntityId ownerId, Entity owner)
+        public NpcEntity(EntityId id, EntityId ownerId, Entity owner, NpcInfo info)
             : base(id)
         {
             OwnerId = ownerId;
             Owner = owner;
+            Info = info;
         }
     }
 }
