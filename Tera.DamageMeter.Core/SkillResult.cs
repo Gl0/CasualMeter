@@ -60,9 +60,9 @@ namespace Tera.DamageMeter
                     Skill = new UserSkill(message.SkillId, sourceUser.RaceGenderClass, npc.Info.Name);
                 }
                 SourcePlayer = playerTracker.Get(sourceUser.PlayerId);
+                if (Skill == null)
+                    Skill = new UserSkill(message.SkillId, sourceUser.RaceGenderClass, "Unknown");
             }
-			if (Skill == null)
-				Skill = new UserSkill(message.SkillId, sourceUser.RaceGenderClass, "Unknown");
             if (targetUser != null)
             {
                 TargetPlayer = playerTracker.Get(targetUser.PlayerId);
