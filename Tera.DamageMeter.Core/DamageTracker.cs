@@ -88,7 +88,7 @@ namespace Tera.DamageMeter
                     if (!npctarget.Info.Boss)
                         return null;
                 if (IgnoreOneshots) /// ignore damage that is more than 10x times than mob's hp
-                    if ((npctarget.Info.HP>0) && (npctarget.Info.HP * 10 <= skillResult.Damage))
+                    if ((npctarget.Info.HP>0) && (npctarget.Info.HP <= skillResult.Damage/10))
                         return null;
             }
             var player = skillResult.SourcePlayer;
