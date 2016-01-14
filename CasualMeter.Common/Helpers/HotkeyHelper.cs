@@ -45,9 +45,9 @@ namespace CasualMeter.Common.Helpers
         {
             lock (_lock)
             {
-                Register(HotKeys.Modifier, HotKeys.PasteStats, CasualMessenger.Instance.PastePlayerStats);
-                Register(HotKeys.Modifier, HotKeys.Reset, () => CasualMessenger.Instance.ResetPlayerStats(false));
-                Register(HotKeys.Modifier, HotKeys.SaveAndReset, () => CasualMessenger.Instance.ResetPlayerStats(true));
+                Register(HotKeys.ModifierPaste, HotKeys.PasteStats, CasualMessenger.Instance.PastePlayerStats);
+                Register(HotKeys.ModifierReset, HotKeys.Reset, () => CasualMessenger.Instance.ResetPlayerStats(false));
+                Register(HotKeys.ModifierSave, HotKeys.SaveAndReset, () => CasualMessenger.Instance.ResetPlayerStats(true));
             }
         }
 
@@ -56,9 +56,9 @@ namespace CasualMeter.Common.Helpers
             if (SettingsHelper.Instance.Settings.UseGlobalHotkeys) return;
             lock (_lock)
             {
-                Unregister(HotKeys.Modifier, HotKeys.PasteStats);
-                Unregister(HotKeys.Modifier, HotKeys.Reset);
-                Unregister(HotKeys.Modifier, HotKeys.SaveAndReset);
+                Unregister(HotKeys.ModifierPaste, HotKeys.PasteStats);
+                Unregister(HotKeys.ModifierReset, HotKeys.Reset);
+                Unregister(HotKeys.ModifierSave, HotKeys.SaveAndReset);
             }
         }
 
