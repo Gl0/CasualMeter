@@ -203,9 +203,9 @@ namespace CasualMeter
 
         #region Commands
 
-        public RelayCommand ToggleIsPinned
+        public RelayCommand ToggleIsPinnedCommand
         {
-            get { return GetProperty(getDefault: () => new RelayCommand(vToggleIsPinned)); }
+            get { return GetProperty(getDefault: () => new RelayCommand(ToggleIsPinned)); }
             set { SetProperty(value); }
         }
 
@@ -221,12 +221,6 @@ namespace CasualMeter
             set { SetProperty(value); }
         }
         #endregion
-
-        public void vToggleIsPinned()
-        {
-            IsPinned = !IsPinned;
-            ProcessHelper.Instance.ForceVisibilityRefresh();
-        }
 
         private object _snifferLock = new object();
 
@@ -368,6 +362,12 @@ namespace CasualMeter
         private void ClearEncounters()
         {
             ArchivedDamageTrackers.Clear();
+        }
+
+        private void ToggleIsPinned()
+        {
+            IsPinned = !IsPinned;
+            ProcessHelper.Instance.ForceVisibilityRefresh();
         }
     }
 }

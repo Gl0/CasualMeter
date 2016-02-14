@@ -54,7 +54,7 @@
         <tb:TaskbarIcon IconSource="Resources/CasualMeter.ico"
                         ToolTipText="Casual Meter"
                         ContextMenu="{StaticResource MainMenu}"
-                        DoubleClickCommand="{Binding ToggleIsPinned}">
+                        DoubleClickCommand="{Binding ToggleIsPinnedCommand}">
         </tb:TaskbarIcon>
         <StackPanel>
             <StackPanel.LayoutTransform>
