@@ -177,30 +177,6 @@ namespace CasualMeter
             }
         }
 
-        public IPAddress LocalIpAddress
-        {
-            get { return GetProperty(getDefault: () => SettingsHelper.Instance.Settings.LocalIpAddress); }
-            set
-            {
-                SetProperty(value, onChanged: e =>
-                {
-                    SettingsHelper.Instance.Settings.LocalIpAddress = value;
-                    if (value != null) Initialize();//reinitialize the sniffer if local ip is changed
-                });
-            }
-        }
-
-        public IEnumerable<IPAddress> AllLocalIpAddresses
-        {
-            get
-            {
-                return NetworkInterface.GetAllNetworkInterfaces()
-                                       .SelectMany(x => x.GetIPProperties().UnicastAddresses)
-                                       .Select(x => x.Address)
-                                       .Where(x => x.AddressFamily == AddressFamily.InterNetwork);
-            }
-        }
-
         #region Commands
 
         public RelayCommand ToggleIsPinnedCommand
@@ -241,9 +217,9 @@ namespace CasualMeter
                     }
 
                     IpSniffer ipSniffer = null;
-                    if (UseRawSockets && LocalIpAddress != null)
+                    if (UseRawSockets)
                     {
-                        ipSniffer = new IpSnifferRawSocketSingleInterface(LocalIpAddress);
+                        ipSniffer = new IpSnifferRawSocketMultipleInterfaces();
                     }
 
                     _teraSniffer = new TeraSniffer(ipSniffer, BasicTeraData.Servers);

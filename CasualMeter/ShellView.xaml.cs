@@ -24,6 +24,7 @@ using CasualMeter.Views;
 using Lunyx.Common;
 using Lunyx.Common.UI.Wpf.Extensions;
 using Tera.DamageMeter;
+using System.Windows.Forms;
 
 namespace CasualMeter
 {
@@ -99,7 +100,20 @@ namespace CasualMeter
                     var ownedWindows = OwnedWindows.Cast<Window>().Where(w => w.IsVisible).ToList();
                     if (!ownedWindows.Any())
                     {
-                        v.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                        // WindowStartupLocation.CenterScreen sometimes put window out of screen in multi monitor environment
+                        v.WindowStartupLocation = WindowStartupLocation.Manual;
+                        Screen screen = Screen.FromHandle(new WindowInteropHelper(this).Handle);
+                        // Transform screen point to WPF device independent point
+                        PresentationSource source = PresentationSource.FromVisual(this);
+                        Matrix m = source.CompositionTarget.TransformToDevice;
+                        double dx = m.M11;
+                        double dy = m.M22;
+                        Point locationFromScreen = new Point(
+                            screen.Bounds.X + ((screen.Bounds.Width - 800*dx) / 2), 
+                            screen.Bounds.Y + ((screen.Bounds.Height - 725*dy) / 2));
+                        Point targetPoints = source.CompositionTarget.TransformFromDevice.Transform(locationFromScreen);
+                        v.Left = targetPoints.X;
+                        v.Top = targetPoints.Y;
                     }
                     else
                     {

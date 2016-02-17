@@ -28,7 +28,7 @@ namespace NetworkSniffer
         {
             get
             {
-                return AllInterfaceIPs.Where(x => x.ToString() != "127.0.0.1");
+                return AllInterfaceIPs;
             }
         }
 

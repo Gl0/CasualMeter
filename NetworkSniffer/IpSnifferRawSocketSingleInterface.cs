@@ -17,11 +17,12 @@ namespace NetworkSniffer
         private Socket _socket;
         private readonly IPAddress _localIp;
         private readonly byte[] _buffer;
+        private bool _isInit;
 
         public IpSnifferRawSocketSingleInterface(IPAddress localIp)
         {
             _localIp = localIp;
-            _buffer = new byte[1<<17];
+            _buffer = new byte[1<<19];
         }
 
         private void Init()
@@ -35,12 +36,16 @@ namespace NetworkSniffer
             var receiveAllOn = BitConverter.GetBytes(1);
             _socket.IOControl(IOControlCode.ReceiveAll, receiveAllOn, null);
 
-            _socket.ReceiveBufferSize = (1 << 16);
+            _socket.ReceiveBufferSize = (1 << 18);
             Read();
         }
 
         private void Finish()
         {
+            if (!_isInit)
+            {
+                return;
+            }
             Debug.Assert(_socket != null);
             _socket.Close();
             _socket = null;
@@ -65,7 +70,17 @@ namespace NetworkSniffer
         protected override void SetEnabled(bool value)
         {
             if (value)
-                Init();
+            {
+                try
+                {
+                    Init();
+                    _isInit = true;
+                }
+                catch
+                {
+                    // ignored ip addresses that cannot be binded, due to "disconnect network cable" state or other causes.
+                }
+            }
             else
                 Finish();
         }

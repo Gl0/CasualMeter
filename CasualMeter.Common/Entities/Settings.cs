@@ -52,9 +52,6 @@ namespace CasualMeter.Common.Entities
         [DefaultValue(false)]
         public bool UseRawSockets { get; set; }
 
-        [DefaultValue(null)]
-        public IPAddress LocalIpAddress { get; set; }
-
         //since you can't set DefaultValueAttribute on objects
         private HotKeySettings _hotkeys;
         public HotKeySettings HotKeys

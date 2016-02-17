@@ -181,27 +181,6 @@
                                   HorizontalAlignment="Right"
                                   Margin="0,6,1,0"/>
                     </Grid>
-                    <Grid Visibility="{Binding ElementName=UseRawSocketsCheckBox, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0">Bind to which local IP?</TextBlock>
-                        <ComboBox Grid.Column="1" x:Name="LocalIpAddress"
-                                  IsEnabled="{Binding UseRawSockets}"
-                                  IsEditable="False"
-                                  SelectedItem="{Binding LocalIpAddress}"
-                                  ItemsSource="{Binding AllLocalIpAddresses}"
-                                  HorizontalAlignment="Right"
-                                  Margin="0,6,1,0"
-                                  >
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Path=.}" Foreground="Black" />
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
-                    </Grid>
                 </StackPanel>
             </Border>
             <ItemsControl Background="Transparent" Width="{StaticResource Width}"
