@@ -29,7 +29,7 @@ namespace CasualMeter.Common.UI.Controls
 
             Topmost = true;
             ShowInTaskbar = false;
-            Height = SystemParameters.WorkArea.Height; //Fix clipping window on large monitors
+            Height = SystemParameters.VirtualScreenHeight; //Fix clipping window on large monitors
             ResizeMode = ResizeMode.NoResize;
             WindowStyle= WindowStyle.None;
             AllowsTransparency = true;
