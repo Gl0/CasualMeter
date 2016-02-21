@@ -9,12 +9,15 @@
         <ImageSource x:Key="PinButtonImage">pack://application:,,,/Resources/pin-inverted.png</ImageSource>
         <ImageSource x:Key="DropdownButtonImage">pack://application:,,,/Resources/down-open-inverted.png</ImageSource>
         <ImageSource x:Key="SettingsButtonImage">pack://application:,,,/Resources/settings-inverted.png</ImageSource>
-        <SolidColorBrush x:Key="BrushBlack" Color="#1A1A1A"/>
+
+        <Color x:Key="ColorBlack">#1A1A1A</Color>
+        <Color x:Key="ColorWhite">GhostWhite</Color>
+        <SolidColorBrush x:Key="BrushBlack" Color="{StaticResource ColorBlack}"/>
+        <SolidColorBrush x:Key="BrushWhite" Color="{StaticResource ColorWhite}"/>
         <SolidColorBrush x:Key="BrushGray" Color="#4D4D4D"/>
         <SolidColorBrush x:Key="BrushLightGray" Color="#808080"/>
         <SolidColorBrush x:Key="BrushHeal" Color="LimeGreen"/>
         <SolidColorBrush x:Key="BrushDamage" Color="Red"/>
-        <SolidColorBrush x:Key="BrushWhite" Color="GhostWhite"/>
         <SolidColorBrush x:Key="BrushBackgroundBlack" Color="#1A1A1A" Opacity="{Binding ElementName=OpacityScaleSlider, Path=Value}"/>
         
         <ControlTemplate TargetType="{x:Type Button}" x:Key="ButtonTemplate">

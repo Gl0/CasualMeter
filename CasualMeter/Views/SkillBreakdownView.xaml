@@ -45,6 +45,11 @@
                 <Setter Property="AlternationCount" Value="2" />
             </Style>
             <Style TargetType="{x:Type DataGridRow}">
+                <Style.Resources>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="{StaticResource ColorBlack}" />
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="{StaticResource ColorWhite}" />
+                    <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="{StaticResource ColorBlack}" />
+                </Style.Resources>
                 <Style.Triggers>
                     <Trigger Property="ItemsControl.AlternationIndex" Value="0">
                         <Setter Property="Background" Value="#CCC"></Setter>
@@ -53,9 +58,6 @@
                         <Setter Property="Background" Value="#EEE"></Setter>
                     </Trigger>
                 </Style.Triggers>
-            </Style>
-            <Style TargetType="{x:Type DataGridCell}">
-                <Setter Property="Foreground" Value="{StaticResource BrushBlack}"></Setter>
             </Style>
         </Grid.Resources>
         <StackPanel>
@@ -83,6 +85,11 @@
                                      ItemsSource="{Binding}"
                                      AutoGenerateColumns="False"
                                      CanUserResizeRows="False"
+                                     CanUserDeleteRows="False"
+                                     CanUserAddRows="False"
+                                     AllowDrop="False"
+                                     IsReadOnly="True"
+                                     ClipboardCopyMode="IncludeHeader"
                                      SelectionChanged="SkillResultsGrid_OnSelectionChanged"
                                      SortDescriptionSource="{Binding SkillBreakdownViewModel.SortDescriptionSource, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:CasualMeterWindow}}"/>
             </Grid>
