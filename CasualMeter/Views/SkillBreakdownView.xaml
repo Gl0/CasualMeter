@@ -80,7 +80,7 @@
                     <casualMeter:CloseButton Grid.Column="2" Click="CloseButton_OnClick"/>
                 </Grid>
             </Border>
-            <Grid MaxHeight="700">
+            <Grid x:Name="SkillResultsGridContainer" MaxHeight="700">
                 <lc:SortableDataGrid x:Name="SkillResultsGrid"
                                      ItemsSource="{Binding}"
                                      AutoGenerateColumns="False"
@@ -90,7 +90,9 @@
                                      AllowDrop="False"
                                      IsReadOnly="True"
                                      ClipboardCopyMode="IncludeHeader"
+                                     IsSynchronizedWithCurrentItem="False"
                                      SelectionChanged="SkillResultsGrid_OnSelectionChanged"
+                                     LostFocus="SkillResultsGrid_OnLostFocus"
                                      SortDescriptionSource="{Binding SkillBreakdownViewModel.SortDescriptionSource, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:CasualMeterWindow}}"/>
             </Grid>
         </StackPanel>

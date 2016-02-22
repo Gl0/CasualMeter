@@ -227,5 +227,10 @@ namespace CasualMeter.Views
             }
             catch (Exception) { /* eat it */ }
         }
+
+        private void SkillResultsGrid_OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            SkillResultsGrid.UnselectAll();
+        }
     }
 }
