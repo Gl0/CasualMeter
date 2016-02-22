@@ -48,6 +48,8 @@
                 <Style.Resources>
                     <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="{StaticResource ColorBlack}" />
                     <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="{StaticResource ColorWhite}" />
+                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="{StaticResource ColorBlack}" />
+                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="{StaticResource ColorWhite}" />
                     <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="{StaticResource ColorBlack}" />
                 </Style.Resources>
                 <Style.Triggers>
@@ -92,7 +94,6 @@
                                      ClipboardCopyMode="IncludeHeader"
                                      IsSynchronizedWithCurrentItem="False"
                                      SelectionChanged="SkillResultsGrid_OnSelectionChanged"
-                                     LostFocus="SkillResultsGrid_OnLostFocus"
                                      SortDescriptionSource="{Binding SkillBreakdownViewModel.SortDescriptionSource, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:CasualMeterWindow}}"/>
             </Grid>
         </StackPanel>
