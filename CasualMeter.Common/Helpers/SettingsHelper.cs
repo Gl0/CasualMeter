@@ -37,9 +37,9 @@ namespace CasualMeter.Common.Helpers
             _jsonSerializerSettings.DefaultValueHandling = DefaultValueHandling.Populate;
             _jsonSerializerSettings.Converters.Add(new IPAddressConverter());
 
-            BasicTeraData = new BasicTeraData(SettingsPath);
-            LoadClassIcons();
             Load();
+            BasicTeraData = new BasicTeraData(SettingsPath,Settings.Language);
+            LoadClassIcons();
         }
 
         public void Initialize()

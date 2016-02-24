@@ -15,17 +15,19 @@ namespace Tera.Data
     {
         public string ResourceDirectory { get; private set; }
         public IEnumerable<Server> Servers { get; private set; }
+        public string Language { get; private set; }
         private readonly Func<string, TeraData> _dataForRegion;
         private readonly string _overridesDirectory;
-        
+
         public TeraData DataForRegion(string region)
         {
             return _dataForRegion(region);
         }
 
-        public BasicTeraData(string overridesDirectory)
+        public BasicTeraData(string overridesDirectory,string language)
         {
             ResourceDirectory = FindResourceDirectory();
+            Language = language;
             _overridesDirectory = overridesDirectory;
             _dataForRegion = Memoize<string, TeraData>(region => new TeraData(this, region));
             LoadServers();

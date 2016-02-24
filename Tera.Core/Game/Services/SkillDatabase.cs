@@ -17,9 +17,10 @@ namespace Tera.Game
         private readonly Dictionary<PlayerClass, List<Skill>> _damageSkillIdOverrides = new Dictionary<PlayerClass, List<Skill>>();
         private readonly Dictionary<PlayerClass, List<Skill>> _healSkillIdOverrides = new Dictionary<PlayerClass, List<Skill>>();
 
-        public SkillDatabase(string directory)
+        public SkillDatabase(string directory,string reg_lang)
         {
-            InitializeSkillDatabase(Path.Combine(directory, "user_skills.txt"));
+            InitializeSkillDatabase(Path.Combine(directory, $"skills\\skills-override-{reg_lang}.tsv"));
+            InitializeSkillDatabase(Path.Combine(directory, $"skills\\skills-{reg_lang}.tsv" ));
             InitializeSkillDatabaseOverrides(Path.Combine(directory, "skill-overrides"));
         }
 
@@ -32,7 +33,8 @@ namespace Tera.Game
                 var skill = new UserSkill(int.Parse(parts[0]), new RaceGenderClass(parts[1], parts[2], parts[3]), parts[4], parts[5] == "" ? false:bool.Parse(parts[5]),parts[6]);
                 if (!_userSkilldata.ContainsKey(skill.RaceGenderClass))
                     _userSkilldata[skill.RaceGenderClass] = new Dictionary<int, UserSkill>();
-                _userSkilldata[skill.RaceGenderClass].Add(skill.Id,skill);
+                if (!_userSkilldata[skill.RaceGenderClass].ContainsKey(skill.Id))
+                    _userSkilldata[skill.RaceGenderClass].Add(skill.Id,skill);
             }
         }
 

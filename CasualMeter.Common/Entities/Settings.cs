@@ -52,6 +52,9 @@ namespace CasualMeter.Common.Entities
         [DefaultValue(false)]
         public bool UseRawSockets { get; set; }
 
+        [DefaultValue("Auto")]
+        public string Language { get; set; }
+
         //since you can't set DefaultValueAttribute on objects
         private HotKeySettings _hotkeys;
         public HotKeySettings HotKeys

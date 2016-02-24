@@ -17,9 +17,10 @@ namespace Tera.Data
 
         internal TeraData(BasicTeraData basicData, string region)
         {
-            SkillDatabase = new SkillDatabase(basicData.ResourceDirectory);
-            NpcDatabase = new NpcDatabase(Path.Combine(basicData.ResourceDirectory, "npc-RU.txt"));
-            OpCodeNamer = new OpCodeNamer(Path.Combine(basicData.ResourceDirectory, $"opcodes-{region}.txt"));
+            string suffix = (basicData.Language=="Auto")?(region != "EU") ? region : "EU-EN": basicData.Language;
+            SkillDatabase = new SkillDatabase(basicData.ResourceDirectory,suffix);
+            NpcDatabase = new NpcDatabase(basicData.ResourceDirectory, suffix);
+            OpCodeNamer = new OpCodeNamer(Path.Combine(basicData.ResourceDirectory, $"opcodes\\opcodes-{region}.txt"));
         }
     }
 }
