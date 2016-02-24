@@ -239,7 +239,7 @@
     <Content Include="res\class-icons\ninja.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="res\monsters-override.xml">
+    <Content Include="res\monsters\monsters-override.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="res\monsters\monsters-EU-EN.xml">
