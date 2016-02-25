@@ -20,7 +20,7 @@ namespace Tera.Game
 
         private static Dictionary<Tuple<ushort, int>, NpcInfo> LoadNpcInfos(string directory, string reg_lang)
         {
-            var xml = XDocument.Load(directory + "monsters\\monsters-" + reg_lang + ".xml");
+            var xml = XDocument.Load(Path.Combine(directory, $"monsters\\monsters-{reg_lang}.xml"));
             var NPCs = (from zones in xml.Root.Elements("Zone")
                         let huntingzoneid = ushort.Parse(zones.Attribute("id").Value)
                         from monsters in zones.Elements("Monster")
@@ -29,7 +29,7 @@ namespace Tera.Game
                         let hp = int.Parse(monsters.Attribute("hp").Value)
                         let name = monsters.Attribute("name").Value
                         select new NpcInfo(huntingzoneid, templateid, boss, hp, name)).ToDictionary(x => Tuple.Create(x.HuntingZoneId, x.TemplateId));
-            xml = XDocument.Load(directory + "monsters\\monsters-override.xml");
+            xml = XDocument.Load(Path.Combine(directory,"monsters\\monsters-override.xml"));
             var overs = (from zones in xml.Root.Elements("Zone")
                         let huntingzoneid = ushort.Parse(zones.Attribute("id").Value)
                         from monsters in zones.Elements("Monster")

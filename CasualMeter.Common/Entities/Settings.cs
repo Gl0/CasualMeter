@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CasualMeter.Common.JsonConverters;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -52,6 +54,7 @@ namespace CasualMeter.Common.Entities
         [DefaultValue(false)]
         public bool UseRawSockets { get; set; }
 
+        [JsonConverter(typeof(LanguageConverter))]
         [DefaultValue("Auto")]
         public string Language { get; set; }
 
