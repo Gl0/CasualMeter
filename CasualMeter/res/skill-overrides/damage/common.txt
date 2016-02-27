@@ -1,7 +1,0 @@
-# Misc.
-200002;Outlaw Declaration
-60401301;Personalized Greeting
-9020100;Skirmish Running
-# Pets.
-6004000;Summon Pet:Chef
-6005000;Summon Pet:Rocky
