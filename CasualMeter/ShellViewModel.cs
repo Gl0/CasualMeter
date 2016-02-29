@@ -33,9 +33,6 @@ namespace CasualMeter
 {
     public class ShellViewModel : CasualViewModelBase
     {
-        private static readonly ILog Logger = LogManager.GetLogger
-            (MethodBase.GetCurrentMethod().DeclaringType);
-
         private ITeraSniffer _teraSniffer;
         private TeraData _teraData;
         private MessageFactory _messageFactory;
@@ -242,9 +239,11 @@ namespace CasualMeter
             _messageFactory = new MessageFactory(_teraData.OpCodeNamer);
 
             ResetDamageTracker();
-            DamageTracker = DamageTracker ?? new DamageTracker();
-            DamageTracker.OnlyBosses = OnlyBosses;
-            DamageTracker.IgnoreOneshots = IgnoreOneshots;
+            DamageTracker = DamageTracker ?? new DamageTracker
+            {
+                OnlyBosses = OnlyBosses,
+                IgnoreOneshots = IgnoreOneshots
+            };
 
             Logger.Info($"Connected to server {server.Name}.");
         }
@@ -265,9 +264,11 @@ namespace CasualMeter
                 ArchivedDamageTrackers.Remove(DamageTracker);
             }
 
-            DamageTracker = new DamageTracker();
-            DamageTracker.OnlyBosses = OnlyBosses;
-            DamageTracker.IgnoreOneshots = IgnoreOneshots;
+            DamageTracker = new DamageTracker
+            {
+                OnlyBosses = OnlyBosses,
+                IgnoreOneshots = IgnoreOneshots
+            };
         }
 
         private void HandleMessageReceived(Message obj)

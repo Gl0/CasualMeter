@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -11,12 +12,16 @@ using CasualMeter.Common.Conductors;
 using CasualMeter.Common.Conductors.Messages;
 using CasualMeter.Common.Helpers;
 using CasualMeter.Common.UI.ViewModels;
+using log4net;
 using Lunyx.Common.UI.Wpf.Controls;
 
 namespace CasualMeter.Common.UI.Controls
 {
     public class CasualMeterWindow : ClickThroughWindow
     {
+        protected static readonly ILog Logger = LogManager.GetLogger
+            (MethodBase.GetCurrentMethod().DeclaringType);
+
         public CasualViewModelBase ViewModel { get; set; }
 
         protected override void OnInitialized(EventArgs e)
@@ -52,8 +57,6 @@ namespace CasualMeter.Common.UI.Controls
 
         private void SetVisibility(RefreshVisibilityMessage message)
         {
-            Topmost = false;
-            Topmost = true;// sometimes disappears, need refresh
             if (SettingsHelper.Instance.Settings.IsPinned)
             {
                 Visibility = Visibility.Visible;

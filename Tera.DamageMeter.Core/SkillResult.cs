@@ -26,7 +26,7 @@ namespace Tera.DamageMeter
         public Skill Skill { get; private set; }
         public string SkillName => Skill?.Name ?? SkillId.ToString();
         public string SkillNameDetailed
-            => $"{Skill?.Name ?? SkillId.ToString()} {(IsChained != null ? (bool) IsChained ? "[C]" : null : null)} {((Skill.Detail=="")? null : "("+Skill.Detail+")")}";
+            => $"{Skill?.Name ?? SkillId.ToString()} {(IsChained != null ? (bool) IsChained ? "[C]" : null : null)} {(string.IsNullOrEmpty(Skill?.Detail) ? null : $"({Skill.Detail})")}".Replace("  "," ");
         public bool? IsChained => Skill.IsChained;
         public int Damage { get { return IsHeal ? 0 : Amount; } }
         public int Heal { get { return IsHeal ? Amount : 0; } }

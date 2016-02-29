@@ -45,13 +45,6 @@
                 <Setter Property="AlternationCount" Value="2" />
             </Style>
             <Style TargetType="{x:Type DataGridRow}">
-                <Style.Resources>
-                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="{StaticResource ColorBlack}" />
-                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="{StaticResource ColorWhite}" />
-                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="{StaticResource ColorBlack}" />
-                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="{StaticResource ColorWhite}" />
-                    <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="{StaticResource ColorBlack}" />
-                </Style.Resources>
                 <Style.Triggers>
                     <Trigger Property="ItemsControl.AlternationIndex" Value="0">
                         <Setter Property="Background" Value="#CCC"></Setter>
@@ -60,6 +53,15 @@
                         <Setter Property="Background" Value="#EEE"></Setter>
                     </Trigger>
                 </Style.Triggers>
+                <Setter Property="Foreground" Value="{StaticResource BrushBlack}"/>
+            </Style>
+            <Style TargetType="{x:Type DataGridCell}">
+                <Style.Resources>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="{StaticResource ColorBlack}" />
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="{StaticResource ColorWhite}" />
+                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="{StaticResource ColorBlack}" />
+                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="{StaticResource ColorWhite}" />
+                </Style.Resources>
             </Style>
         </Grid.Resources>
         <StackPanel>

@@ -53,6 +53,10 @@ namespace CasualMeter.Common.Entities
 
         [DefaultValue(false)]
         public bool UseRawSockets { get; set; }
+        
+        [JsonConverter(typeof(LanguageConverter))]
+        [DefaultValue("Auto")]
+        public string Language { get; set; }
 
         [JsonConverter(typeof(LanguageConverter))]
         [DefaultValue("Auto")]

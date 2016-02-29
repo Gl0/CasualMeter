@@ -236,7 +236,119 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <Content Include="res\class-icons\ninja.png">
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CasualMeter.Common\CasualMeter.Common.csproj">
+      <Project>{1f43f250-51f4-4ddf-b0db-17dcaf175cdc}</Project>
+      <Name>CasualMeter.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NetworkSniffer\NetworkSniffer.csproj">
+      <Project>{5B431143-1A77-44FF-8BC3-926FEC8AD97C}</Project>
+      <Name>NetworkSniffer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tera.Core\Tera.Core.csproj">
+      <Project>{ee476c7c-2942-4ba4-ab47-7adbe65635fd}</Project>
+      <Name>Tera.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tera.DamageMeter.Core\Tera.DamageMeter.Core.csproj">
+      <Project>{d1ed4752-f2fc-44c3-97b2-580bc79f4af1}</Project>
+      <Name>Tera.DamageMeter.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tera.Data\Tera.Data.csproj">
+      <Project>{4B6AA9BD-CEC2-4AA6-B35A-1ACB2FA7767B}</Project>
+      <Name>Tera.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tera.Sniffing\Tera.Sniffing.csproj">
+      <Project>{66BB1685-8FF5-4431-B77F-7F80C92A5DA4}</Project>
+      <Name>Tera.Sniffing</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\CasualMeter.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\close-inverted.png" />
+    <Resource Include="Resources\down-open-inverted.png" />
+    <Resource Include="Resources\settings-inverted.png" />
+    <Resource Include="Resources\pin-inverted.png" />
+    <Content Include="res\servers.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\skill-overrides\damage\brawler.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\skill-overrides\damage\common.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\skill-overrides\heal\brawler.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\skill-overrides\heal\common.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\skill-overrides\heal\gunner.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\skill-overrides\heal\archer.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\skill-overrides\heal\berserker.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\skill-overrides\heal\lancer.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\skill-overrides\heal\mystic.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\skill-overrides\heal\priest.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\skill-overrides\heal\reaper.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\skill-overrides\heal\slayer.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\skill-overrides\heal\sorcerer.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\skill-overrides\heal\warrior.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\skill-overrides\damage\archer.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\skill-overrides\damage\berserker.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\skill-overrides\damage\gunner.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\skill-overrides\damage\lancer.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\skill-overrides\damage\mystic.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\skill-overrides\damage\priest.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\skill-overrides\damage\reaper.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\skill-overrides\damage\slayer.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\skill-overrides\damage\sorcerer.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\skill-overrides\damage\warrior.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="res\monsters\monsters-override.xml">
@@ -340,124 +452,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CasualMeter.Common\CasualMeter.Common.csproj">
-      <Project>{1f43f250-51f4-4ddf-b0db-17dcaf175cdc}</Project>
-      <Name>CasualMeter.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NetworkSniffer\NetworkSniffer.csproj">
-      <Project>{5B431143-1A77-44FF-8BC3-926FEC8AD97C}</Project>
-      <Name>NetworkSniffer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Tera.Core\Tera.Core.csproj">
-      <Project>{ee476c7c-2942-4ba4-ab47-7adbe65635fd}</Project>
-      <Name>Tera.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Tera.DamageMeter.Core\Tera.DamageMeter.Core.csproj">
-      <Project>{d1ed4752-f2fc-44c3-97b2-580bc79f4af1}</Project>
-      <Name>Tera.DamageMeter.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Tera.Data\Tera.Data.csproj">
-      <Project>{4B6AA9BD-CEC2-4AA6-B35A-1ACB2FA7767B}</Project>
-      <Name>Tera.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Tera.Sniffing\Tera.Sniffing.csproj">
-      <Project>{66BB1685-8FF5-4431-B77F-7F80C92A5DA4}</Project>
-      <Name>Tera.Sniffing</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\CasualMeter.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\close-inverted.png" />
-    <Resource Include="Resources\down-open-inverted.png" />
-    <Resource Include="Resources\settings-inverted.png" />
-    <Resource Include="Resources\pin-inverted.png" />
-    <Content Include="res\class-icons\brawler.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\servers.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\skill-overrides\damage\brawler.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\skill-overrides\damage\common.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\skill-overrides\heal\brawler.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\skill-overrides\heal\common.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\skill-overrides\heal\gunner.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\skill-overrides\heal\archer.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\skill-overrides\heal\berserker.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\skill-overrides\heal\lancer.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\skill-overrides\heal\mystic.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\skill-overrides\heal\priest.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\skill-overrides\heal\reaper.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\skill-overrides\heal\slayer.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\skill-overrides\heal\sorcerer.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\skill-overrides\heal\warrior.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\skill-overrides\damage\archer.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\skill-overrides\damage\berserker.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\skill-overrides\damage\gunner.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\skill-overrides\damage\lancer.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\skill-overrides\damage\mystic.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\skill-overrides\damage\priest.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\skill-overrides\damage\reaper.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\skill-overrides\damage\slayer.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\skill-overrides\damage\sorcerer.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\skill-overrides\damage\warrior.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.1">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4.5.1 %28x86 and x64%29</ProductName>
@@ -501,6 +495,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="res\class-icons\warrior.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\class-icons\brawler.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\class-icons\ninja.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -33,9 +33,7 @@ namespace CasualMeter.Common.Helpers
             Directory.CreateDirectory(SettingsPath);//ensure settings directory is created
             _classIcons = new Dictionary<PlayerClass, string>();
 
-            _jsonSerializerSettings = new JsonSerializerSettings();
-            _jsonSerializerSettings.DefaultValueHandling = DefaultValueHandling.Populate;
-            _jsonSerializerSettings.Converters.Add(new LanguageConverter());
+            _jsonSerializerSettings = new JsonSerializerSettings {DefaultValueHandling = DefaultValueHandling.Populate};
 
             Load();
             BasicTeraData = new BasicTeraData(SettingsPath,Settings.Language);

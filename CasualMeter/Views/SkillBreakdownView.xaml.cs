@@ -117,11 +117,6 @@ namespace CasualMeter.Views
                         Header = "Is Crit?",
                         Binding = new Binding(nameof(SkillResult.IsCritical))
                     });
-                    //SkillResultsGrid.Columns.Add(new DataGridTextColumn
-                    //{
-                    //    Header = "Is Chained?",
-                    //    Binding = new Binding(nameof(SkillResult.IsChained))
-                    //});
                     SkillResultsGrid.Columns.Add(new DataGridTextColumn
                     {
                         Header = "Is Heal?",

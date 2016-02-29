@@ -8,7 +8,7 @@ namespace CasualMeter.Common.JsonConverters
 {
     public class LanguageConverter : JsonConverter
     {
-        private List<string> Languages = new List<string> { "Auto", "NA", "RU", "TW", "JP", "KR", "EU-EN", "EU-FR", "EU-GER" };
+        private readonly List<string> _languages = new List<string> { "Auto", "NA", "RU", "TW", "JP", "KR", "EU-EN", "EU-FR", "EU-GER" };
         public override bool CanConvert(Type objectType)
         {
             return (objectType == typeof(string));
@@ -23,7 +23,7 @@ namespace CasualMeter.Common.JsonConverters
         {
             JToken token = JToken.Load(reader);
 
-            return (token.Value<string>() == null) ? "Auto" : (Languages.Contains(token.Value<string>())) ? token.Value<string>() : "Auto";
+            return token.Value<string>() == null ? "Auto" : _languages.Contains(token.Value<string>()) ? token.Value<string>() : "Auto";
         }
     }
 }

@@ -153,7 +153,7 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0">Count only bosses</TextBlock>
+                        <TextBlock Grid.Column="0">Count Only Bosses</TextBlock>
                         <CheckBox Grid.Column="1" x:Name="OnlyBossesCheckBox"
                                   IsChecked="{Binding OnlyBosses}"
                                   HorizontalAlignment="Right"
@@ -164,7 +164,7 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0">Ignore oneshots (>10x mob hp)</TextBlock>
+                        <TextBlock Grid.Column="0">Ignore One-Shots (>10x HP)</TextBlock>
                         <CheckBox Grid.Column="1" x:Name="IgnoreOneshotsCheckBox"
                                   IsChecked="{Binding IgnoreOneshots}"
                                   HorizontalAlignment="Right"

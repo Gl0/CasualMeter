@@ -77,17 +77,16 @@ namespace Tera.DamageMeter
             get { return GetProperty(getDefault: () => new SkillStats()); }
             set { SetProperty(value); }
         }
-
+        
         private PlayerInfo GetOrCreate(SkillResult skillResult)
         {
-            /// not count bosses
             NpcEntity npctarget = skillResult.Target as NpcEntity;
             if (npctarget != null)
             {
-                if (OnlyBosses) /// not count bosses
+                if (OnlyBosses)//not count bosses
                     if (!npctarget.Info.Boss)
                         return null;
-                if (IgnoreOneshots) /// ignore damage that is more than 10x times than mob's hp
+                if (IgnoreOneshots)//ignore damage that is more than 10x times than mob's hp
                     if ((npctarget.Info.HP>0) && (npctarget.Info.HP <= skillResult.Damage/10))
                         return null;
             }
@@ -149,7 +148,7 @@ namespace Tera.DamageMeter
             var result = new SkillStats();
             if (message.Amount == 0)
                 return result;
-            
+
             result.Damage = message.Damage;
             result.Heal = message.Heal;
 
