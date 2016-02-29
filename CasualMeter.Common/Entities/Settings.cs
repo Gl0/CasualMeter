@@ -58,10 +58,6 @@ namespace CasualMeter.Common.Entities
         [DefaultValue("Auto")]
         public string Language { get; set; }
 
-        [JsonConverter(typeof(LanguageConverter))]
-        [DefaultValue("Auto")]
-        public string Language { get; set; }
-
         //since you can't set DefaultValueAttribute on objects
         private HotKeySettings _hotkeys;
         public HotKeySettings HotKeys
