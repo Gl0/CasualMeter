@@ -30,7 +30,7 @@ namespace Tera.Game
             var listOfParts = lines.Select(s => s.Split(new[] { '\t' }, 7));
             foreach (var parts in listOfParts)
             {
-                var skill = new UserSkill(int.Parse(parts[0]), new RaceGenderClass(parts[1], parts[2], parts[3]), parts[4], parts[5] == "" ? false:bool.Parse(parts[5]),parts[6]);
+                var skill = new UserSkill(int.Parse(parts[0]), new RaceGenderClass(parts[1], parts[2], parts[3]), parts[4], parts[5] != "" && bool.Parse(parts[5]), parts[6]);
                 if (!_userSkilldata.ContainsKey(skill.RaceGenderClass))
                     _userSkilldata[skill.RaceGenderClass] = new Dictionary<int, UserSkill>();
                 if (!_userSkilldata[skill.RaceGenderClass].ContainsKey(skill.Id))
