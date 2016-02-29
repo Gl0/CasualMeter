@@ -25,9 +25,9 @@ namespace CasualMeter.Common.Helpers
             //empty method to ensure initialization
         }
 
-        public void ForceVisibilityRefresh()
+        public void ForceVisibilityRefresh(bool toggle=false)
         {
-            CasualMessenger.Instance.RefreshVisibility(IsTeraActive);
+            CasualMessenger.Instance.RefreshVisibility(IsTeraActive, toggle);
         }
 
         public void UpdateHotKeys()

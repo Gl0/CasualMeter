@@ -89,7 +89,7 @@ namespace CasualMeter
                 SetProperty(value, onChanged: e =>
                 {
                     SettingsHelper.Instance.Settings.IsPinned = value;
-                    ProcessHelper.Instance.ForceVisibilityRefresh();
+                    ProcessHelper.Instance.ForceVisibilityRefresh(true);
                 });
             }
         }
@@ -344,7 +344,6 @@ namespace CasualMeter
         private void ToggleIsPinned()
         {
             IsPinned = !IsPinned;
-            ProcessHelper.Instance.ForceVisibilityRefresh();
         }
     }
 }

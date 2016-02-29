@@ -60,6 +60,11 @@ namespace CasualMeter.Common.UI.Controls
             if (SettingsHelper.Instance.Settings.IsPinned)
             {
                 Visibility = Visibility.Visible;
+                if (message.Toggle)
+                {
+                    Topmost = false;
+                    Topmost = true;
+                }
                 return;
             }
             // at this point, it means that we are not pinned, so set the visibility accordingly
