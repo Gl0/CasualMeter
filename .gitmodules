@@ -1,0 +1,3 @@
+[submodule "CasualMeter/res"]
+	path = CasualMeter/res
+	url = https://github.com/neowutran/TeraDpsMeterData
