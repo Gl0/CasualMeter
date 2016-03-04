@@ -175,5 +175,6 @@ namespace Tera.DamageMeter
             var dps = damage / durationInSeconds;
             return (long)dps;
         }
+        public string Name { get; set; }
     }
 }

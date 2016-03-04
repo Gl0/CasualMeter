@@ -50,6 +50,8 @@ namespace Tera.Game
                 {"S_SPAWN_USER", typeof(SpawnUserServerMessage)},
                 {"S_SPAWN_ME", typeof(SpawnMeServerMessage)},
                 {"S_SPAWN_NPC", typeof(SpawnNpcServerMessage)},
+                {"S_NPC_OCCUPIER_INFO", typeof (SNpcOccupierInfo)},
+                {"S_DESPAWN_NPC", typeof (SDespawnNpc)},
                 {"S_SPAWN_PROJECTILE", typeof(SpawnProjectileServerMessage)},
                 {"S_LOGIN", typeof(LoginServerMessage)},
                 {"S_START_USER_PROJECTILE", typeof(StartUserProjectileServerMessage)}

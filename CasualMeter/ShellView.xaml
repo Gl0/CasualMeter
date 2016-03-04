@@ -175,6 +175,17 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0">Autosave Encounters</TextBlock>
+                        <CheckBox Grid.Column="1" x:Name="AutosaveEncountersCheckBox"
+                                  IsChecked="{Binding AutosaveEncounters}"
+                                  HorizontalAlignment="Right"
+                                  Margin="0,6,1,0"/>
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0">Use Raw Sockets instead of WinPcap</TextBlock>
                         <CheckBox Grid.Column="1" x:Name="UseRawSocketsCheckBox"
                                   IsChecked="{Binding UseRawSockets}"

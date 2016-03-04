@@ -52,6 +52,9 @@ namespace CasualMeter.Common.Entities
         public bool IgnoreOneshots { get; set; }
 
         [DefaultValue(false)]
+        public bool AutosaveEncounters { get; set; }
+
+        [DefaultValue(false)]
         public bool UseRawSockets { get; set; }
         
         [JsonConverter(typeof(LanguageConverter))]
