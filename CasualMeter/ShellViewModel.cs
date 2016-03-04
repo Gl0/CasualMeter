@@ -283,7 +283,7 @@ namespace CasualMeter
             _entityTracker.Update(message);
 
             var despawnNpc = message as SDespawnNpc;
-            if (despawnNpc != null)
+            if (despawnNpc != null && !DamageTracker.IsArchived)
             {
                 Entity ent = _entityTracker.GetOrPlaceholder(despawnNpc.NPC);
                 if (ent is NpcEntity)
