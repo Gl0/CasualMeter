@@ -291,7 +291,7 @@ namespace CasualMeter
                     var npce = ent as NpcEntity;
                     if (npce.Info.Boss && despawnNpc.Dead)
                     {
-                        DamageTracker.Name = npce.Info.Name+" | "; //Name encounter with the last dead boss
+                        DamageTracker.Name = npce.Info.Name; //Name encounter with the last dead boss
                         if (AutosaveEncounters) CasualMessenger.Instance.ResetPlayerStats(true);
                     }
                 }
@@ -342,12 +342,20 @@ namespace CasualMeter
             var sb = new StringBuilder();
             bool first = true;
 
+            string body = SettingsHelper.Instance.Settings.DpsPasteFormat;
+            if (SettingsHelper.Instance.Settings.DpsPasteFormat.Contains('@'))
+            {
+                var splitter = SettingsHelper.Instance.Settings.DpsPasteFormat.Split(new[] { '@' }, 2);                
+                var placeHolder = new DamageTrackerFormatter(DamageTracker, FormatHelpers.Invariant);
+                sb.Append(placeHolder.Replace(splitter[0]));
+                body = splitter[1];
+            }
             foreach (var playerInfo in playerStatsSequence)
             {
                 var placeHolder = new PlayerStatsFormatter(playerInfo, FormatHelpers.Invariant);
                 var playerText = first ? "" : " | ";
 
-                playerText += placeHolder.Replace(SettingsHelper.Instance.Settings.DpsPasteFormat);
+                playerText += placeHolder.Replace(body);
 
                 if (sb.Length + playerText.Length > maxLength)
                     break;

@@ -104,6 +104,7 @@
     <Compile Include="Entities\DefaultValueEntity.cs" />
     <Compile Include="Entities\HotKeySettings.cs" />
     <Compile Include="Entities\Settings.cs" />
+    <Compile Include="Formatters\DamageTrackerFormatter.cs" />
     <Compile Include="Formatters\PlayerStatsFormatter.cs" />
     <Compile Include="Helpers\HotkeyHelper.cs" />
     <Compile Include="Helpers\ProcessHelper.cs" />

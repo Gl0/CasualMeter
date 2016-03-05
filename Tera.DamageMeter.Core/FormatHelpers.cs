@@ -87,5 +87,11 @@ namespace Tera.DamageMeter
 
             return fraction.ToString("P1", CultureInfo).Replace(" ", string.Empty);
         }
+        public string FormatName(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return null;
+
+            return $"{name} | ";
+        }
     }
 }
