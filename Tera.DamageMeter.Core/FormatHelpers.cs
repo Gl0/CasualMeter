@@ -91,7 +91,7 @@ namespace Tera.DamageMeter
         {
             if (string.IsNullOrEmpty(name)) return null;
 
-            return $"{name} | ";
+            return $" | {name}";
         }
     }
 }

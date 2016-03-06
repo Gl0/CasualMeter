@@ -6,7 +6,7 @@
         {
             NPC = reader.ReadEntityId();
             reader.Skip(12);
-            Dead = reader.ReadByte()== 5; // 1 = move out of view, 5 = death
+            Dead = reader.ReadByte() == 5; // 1 = move out of view, 5 = death
         }
 
         public EntityId NPC { get; }

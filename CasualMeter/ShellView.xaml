@@ -40,7 +40,7 @@
                 <CollectionViewSource.SortDescriptions>
                     <scm:SortDescription PropertyName="Dealt.Damage" Direction="Descending"/>
                     <scm:SortDescription PropertyName="Dealt.Heal" Direction="Descending"/>
-                    <scm:SortDescription PropertyName="Dealt.Name" Direction="Ascending"/>
+                    <scm:SortDescription PropertyName="Name" Direction="Ascending"/>
                 </CollectionViewSource.SortDescriptions>
             </CollectionViewSource>
             <CollectionViewSource x:Key="SavedEncountersView"
@@ -285,7 +285,7 @@
                                       ItemsSource="{Binding Source={StaticResource SavedEncountersView}}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Button Style="{StaticResource EncounterButtonStyle}">
+                                    <Button Style="{StaticResource EncounterButtonStyle}" ToolTip="{Binding Path=Name}">
                                         <i:Interaction.Triggers>
                                             <i:EventTrigger EventName="Click">
                                                 <i:InvokeCommandAction Command="{Binding ShellViewModel.LoadEncounterCommand, RelativeSource={RelativeSource AncestorType={x:Type controls:CasualMeterWindow}}}"

@@ -343,9 +343,9 @@ namespace CasualMeter
             bool first = true;
 
             string body = SettingsHelper.Instance.Settings.DpsPasteFormat;
-            if (SettingsHelper.Instance.Settings.DpsPasteFormat.Contains('@'))
+            if (body.Contains('@'))
             {
-                var splitter = SettingsHelper.Instance.Settings.DpsPasteFormat.Split(new[] { '@' }, 2);                
+                var splitter = body.Split(new[] { '@' }, 2);                
                 var placeHolder = new DamageTrackerFormatter(DamageTracker, FormatHelpers.Invariant);
                 sb.Append(placeHolder.Replace(splitter[0]));
                 body = splitter[1];
