@@ -257,7 +257,7 @@ namespace CasualMeter
         {
             if (Server == null) return;
 
-            bool saveEncounter = DamageTracker != null && (AutosaveEncounters || (message != null && message.ShouldSaveCurrent));
+            bool saveEncounter = message != null && message.ShouldSaveCurrent;
             if (saveEncounter && !DamageTracker.IsArchived && DamageTracker.StatsByUser.Count > 0 && 
                 DamageTracker.FirstAttack != null && DamageTracker.LastAttack != null)
             {
@@ -320,7 +320,7 @@ namespace CasualMeter
                 && _inactivityTimer.Elapsed > TimeSpan.FromSeconds(SettingsHelper.Instance.Settings.InactivityResetDuration)
                 && skillResultMessage.IsValid())
             {
-                ResetDamageTracker();
+                CasualMessenger.Instance.ResetPlayerStats(AutosaveEncounters);
             }
             if (!DamageTracker.IsArchived && skillResultMessage.IsValid(DamageTracker)) //don't process while viewing a past encounter
             {
