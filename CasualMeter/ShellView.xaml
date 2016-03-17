@@ -13,7 +13,8 @@
                             mc:Ignorable="d"
                             Title="Casual Meter"
                             Width = "{StaticResource Width}"
-                            d:DataContext="{d:DesignInstance d:Type=casualMeter:ShellViewModel}">
+                            d:DataContext="{d:DesignInstance d:Type=casualMeter:ShellViewModel}"
+                            IsVisibleChanged="ShellView_OnIsVisibleChanged">
     <Grid>
         <Grid.Resources>
             <Style TargetType="Border">

@@ -77,6 +77,25 @@ namespace CasualMeter
             SettingsHelper.Instance.Save();
         }
 
+        /// <summary>
+        /// Fixes the Top position of the Window.
+        /// bug: this needs to happen when resuming Windows and unlocking the computer
+        /// </summary>
+        private void FixTopPosition()
+        {
+            while (Math.Abs(Top - SettingsHelper.Instance.Settings.WindowTop) > 0.1)
+            {
+                Top = SettingsHelper.Instance.Settings.WindowTop;
+            }
+        }
+
+        private void ShellView_OnIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {   //this is really only here because if the Window isn't visible (not pinned) when
+            //computer is resumed, the position is not fixed by SystemEvents_SessionSwitch()
+            if ((bool)e.NewValue)
+                FixTopPosition();
+        }
+
         private void Exit_OnClick(object sender, RoutedEventArgs e)
         {
             SaveUiSettings();
@@ -161,7 +180,7 @@ namespace CasualMeter
         {
             if (e.Reason == SessionSwitchReason.SessionUnlock)
             {   //for some reason, after resuming and unlocking, window Top position changes to 0
-                LoadUiSettings();
+                FixTopPosition();
             }
         }
         #endregion
