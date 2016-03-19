@@ -17,6 +17,7 @@ namespace Tera.DamageMeter
         public Player Player { get; private set; }
 
         public string Name => Player.Name;
+        public string FullName => Player.FullName;
         public PlayerClass Class => Player.Class;
 
         public ThreadSafeObservableCollection<SkillResult> SkillLog { get; private set; }

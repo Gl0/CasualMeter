@@ -238,9 +238,9 @@ namespace CasualMeter
         {
             Server = server;
             _teraData = BasicTeraData.DataForRegion(server.Region);
-
+            BasicTeraData.Servers.Region = server.Region;
             _entityTracker = new EntityTracker(_teraData.NpcDatabase);
-            _playerTracker = new PlayerTracker(_entityTracker);
+            _playerTracker = new PlayerTracker(_entityTracker,BasicTeraData.Servers);
             _messageFactory = new MessageFactory(_teraData.OpCodeNamer);
 
             ResetDamageTracker();

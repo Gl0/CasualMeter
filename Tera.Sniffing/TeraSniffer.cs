@@ -24,9 +24,9 @@ namespace Tera.Sniffing
         private MessageSplitter _messageSplitter;
         private readonly IpSniffer _ipSniffer;
 
-        public TeraSniffer(IpSniffer ipSniffer, IEnumerable<Server> servers)
+        public TeraSniffer(IpSniffer ipSniffer, ServerDatabase servers)
         {
-            _serversByIp = servers.ToDictionary(x => x.Ip);
+            _serversByIp = servers.GetServersByIp();
 
             if (ipSniffer == null)
             {

@@ -14,7 +14,7 @@ namespace Tera.Data
     public class BasicTeraData
     {
         public string ResourceDirectory { get; private set; }
-        public IEnumerable<Server> Servers { get; private set; }
+        public ServerDatabase Servers { get; private set; }
         public string Language { get; private set; }
         private readonly Func<string, TeraData> _dataForRegion;
         private readonly string _overridesDirectory;
@@ -35,15 +35,15 @@ namespace Tera.Data
 
         private void LoadServers()
         {
-            var defaultServers = GetServers(Path.Combine(ResourceDirectory, "servers.txt"));
+            Servers = new ServerDatabase(ResourceDirectory);
 
             //handle overrides
             var serversOverridePath = Path.Combine(_overridesDirectory, "server-overrides.txt");
             if (!File.Exists(serversOverridePath))//create the default file if it doesn't exist
                 File.WriteAllText(serversOverridePath, Properties.Resources.server_overrides);
             var overriddenServers = GetServers(serversOverridePath).ToList();
+            Servers.AddOverrides(overriddenServers);
 
-            Servers = overriddenServers.Concat(defaultServers.Where(ds => overriddenServers.All(os => os.Ip != ds.Ip)));
         }
 
         private static string FindResourceDirectory()

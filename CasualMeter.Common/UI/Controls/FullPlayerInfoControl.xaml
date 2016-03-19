@@ -48,7 +48,8 @@
            Height="60" Width="60"/>
     <StackPanel Grid.Column="1">
         <TextBlock Text="{Binding Name}"
-                   Style="{StaticResource BigText}"/>
+                   Style="{StaticResource BigText}"
+                   ToolTip="{Binding FullName}"/>
         <TextBlock Text="{Binding Dealt.CritFraction, Converter={StaticResource DoubleToPercentStringConverter}, StringFormat=Crits: {0}}"/>
         <TextBlock Text="{Binding Dealt.Hits, StringFormat=Hits: {0}}"/>
     </StackPanel>
