@@ -329,9 +329,16 @@ namespace CasualMeter
                 if (!skillResult.IsHeal && skillResult.Amount > 0)
                     _inactivityTimer.Restart();
                 PlayerCount = DamageTracker.StatsByUser.Count;
-            }    
+            }
+
+            var sLogin = message as LoginServerMessage;
+            if (sLogin != null)
+            {
+                Server=BasicTeraData.Servers.GetServer(sLogin.ServerId,Server);
+                return;
+            }
         }
-        
+
         private void PasteStats(PastePlayerStatsMessage obj)
         {
             if (DamageTracker == null) return;
