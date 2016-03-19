@@ -77,7 +77,7 @@ namespace Tera.DamageMeter
             get { return GetProperty(getDefault: () => new SkillStats()); }
             set { SetProperty(value); }
         }
-        
+
         private PlayerInfo GetOrCreate(SkillResult skillResult)
         {
             NpcEntity npctarget = skillResult.Target as NpcEntity;
@@ -148,7 +148,7 @@ namespace Tera.DamageMeter
             var result = new SkillStats();
             if (message.Amount == 0)
                 return result;
-
+            
             result.Damage = message.Damage;
             result.Heal = message.Heal;
 
