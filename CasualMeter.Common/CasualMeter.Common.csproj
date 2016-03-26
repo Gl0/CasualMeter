@@ -83,6 +83,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\AggregatedSkillResult.cs" />
     <Compile Include="Conductors\CasualMessenger.cs" />
     <Compile Include="Conductors\Messages\PastePlayerStatsMessage.cs" />
     <Compile Include="Conductors\Messages\RefreshVisibilityMessage.cs" />

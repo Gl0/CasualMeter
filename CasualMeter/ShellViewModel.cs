@@ -124,6 +124,7 @@ namespace CasualMeter
                 });
             }
         }
+
         public bool AutosaveEncounters 
         { 
             get { return GetProperty(getDefault: () => SettingsHelper.Instance.Settings.AutosaveEncounters); } 
