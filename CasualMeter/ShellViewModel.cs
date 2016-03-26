@@ -320,7 +320,7 @@ namespace CasualMeter
                 && _inactivityTimer.Elapsed > TimeSpan.FromSeconds(SettingsHelper.Instance.Settings.InactivityResetDuration)
                 && skillResultMessage.IsValid())
             {
-                CasualMessenger.Instance.ResetPlayerStats(AutosaveEncounters);
+                CasualMessenger.Instance.ResetPlayerStats(AutosaveEncounters || DamageTracker.IsArchived);
             }
             if (!DamageTracker.IsArchived && skillResultMessage.IsValid(DamageTracker)) //don't process while viewing a past encounter
             {
