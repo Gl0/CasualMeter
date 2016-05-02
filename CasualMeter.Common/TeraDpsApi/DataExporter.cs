@@ -131,7 +131,7 @@ namespace CasualMeter.Common.TeraDpsApi
                 teradpsUser.playerDeathDuration = death.Duration(firstTick, lastTick)/TimeSpan.TicksPerSecond + "";
 
                 var aggro = buffs.Aggro(entity);
-                teradpsUser.aggro = aggro.Duration(firstTick, lastTick) / TimeSpan.TicksPerSecond + "";
+                teradpsUser.aggro = 100 * aggro.Duration(firstTick, lastTick) / interval + "";
 
                 foreach (var buff in buffs.Times)
                 {
