@@ -16,7 +16,7 @@ using CasualMeter.Common.Converters;
 using CasualMeter.Common.Entities;
 using CasualMeter.ViewModels;
 using Lunyx.Common.UI.Wpf.Controls;
-using Tera.DamageMeter;
+using Tera.Game;
 
 namespace CasualMeter.Views
 {

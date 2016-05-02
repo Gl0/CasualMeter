@@ -165,6 +165,17 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0">Count Only Party</TextBlock>
+                        <CheckBox Grid.Column="1" x:Name="PartyOnlyCheckBox"
+                                  IsChecked="{Binding PartyOnly}"
+                                  HorizontalAlignment="Right"
+                                  Margin="0,6,1,0"/>
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0">Ignore One-Shots (>10x HP)</TextBlock>
                         <CheckBox Grid.Column="1" x:Name="IgnoreOneshotsCheckBox"
                                   IsChecked="{Binding IgnoreOneshots}"
@@ -179,6 +190,17 @@
                         <TextBlock Grid.Column="0">Autosave Encounters</TextBlock>
                         <CheckBox Grid.Column="1" x:Name="AutosaveEncountersCheckBox"
                                   IsChecked="{Binding AutosaveEncounters}"
+                                  HorizontalAlignment="Right"
+                                  Margin="0,6,1,0"/>
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0">Autoexport to Excel</TextBlock>
+                        <CheckBox Grid.Column="1" x:Name="ExcelCheckBox"
+                                  IsChecked="{Binding Excel}"
                                   HorizontalAlignment="Right"
                                   Margin="0,6,1,0"/>
                     </Grid>

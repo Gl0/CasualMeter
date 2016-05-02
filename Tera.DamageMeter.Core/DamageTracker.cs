@@ -25,6 +25,12 @@ namespace Tera.DamageMeter
             set { SetProperty(value); }
         }
 
+        public AbnormalityStorage abnormals
+        {
+            get { return GetProperty<AbnormalityStorage>(); }
+            set { SetProperty(value); }
+        }
+
         public bool OnlyBosses {
             get { return GetProperty<bool>(getDefault: () => false); }
             set { SetProperty(value); }

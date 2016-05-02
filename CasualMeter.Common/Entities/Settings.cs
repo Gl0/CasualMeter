@@ -61,6 +61,18 @@ namespace CasualMeter.Common.Entities
         [DefaultValue("Auto")]
         public string Language { get; set; }
 
+        [DefaultValue(false)]
+        public bool Excel { get; set; }
+
+        [DefaultValue(false)]
+        public bool PartyOnly { get; set; }
+
+        [DefaultValue("")]
+        public string TeraDpsUser { get; set; }
+
+        [DefaultValue("")]
+        public string TeraDpsToken { get; set; }
+
         //since you can't set DefaultValueAttribute on objects
         private HotKeySettings _hotkeys;
         public HotKeySettings HotKeys

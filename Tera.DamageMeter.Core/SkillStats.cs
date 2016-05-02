@@ -7,6 +7,7 @@ using System.Linq;
 using Lunyx.Common.UI.Wpf;
 using Nicenis.ComponentModel;
 using Tera.DamageMeter.Annotations;
+using Tera.Game;
 
 namespace Tera.DamageMeter
 {

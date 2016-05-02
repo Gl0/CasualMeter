@@ -16,6 +16,7 @@ using CasualMeter.Common.UI.ViewModels;
 using Lunyx.Common.UI.Wpf;
 using Nicenis.ComponentModel;
 using Tera.DamageMeter;
+using Tera.Game;
 
 namespace CasualMeter.ViewModels
 {

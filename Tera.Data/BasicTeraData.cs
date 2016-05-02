@@ -15,6 +15,7 @@ namespace Tera.Data
     {
         public string ResourceDirectory { get; private set; }
         public ServerDatabase Servers { get; private set; }
+        public IconsDatabase Icons { get; private set; }
         public string Language { get; private set; }
         private readonly Func<string, TeraData> _dataForRegion;
         private readonly string _overridesDirectory;
@@ -28,6 +29,7 @@ namespace Tera.Data
         {
             ResourceDirectory = FindResourceDirectory();
             Language = language;
+            Icons=new IconsDatabase(ResourceDirectory);
             _overridesDirectory = overridesDirectory;
             _dataForRegion = Helpers.Memoize<string, TeraData>(region => new TeraData(this, region));
             LoadServers();

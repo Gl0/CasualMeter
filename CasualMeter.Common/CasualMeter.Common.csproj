@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EPPlus, Version=4.0.5.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.0.5\lib\net20\EPPlus.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="GalaSoft.MvvmLight">
       <HintPath>..\packages\MvvmLightLibs.5.2.0.0\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
     </Reference>
@@ -71,6 +75,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmLightLibs.5.2.0.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -83,6 +88,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TeraDpsApi\DataExporter.cs" />
     <Compile Include="Entities\AggregatedSkillResult.cs" />
     <Compile Include="Conductors\CasualMessenger.cs" />
     <Compile Include="Conductors\Messages\PastePlayerStatsMessage.cs" />
@@ -118,6 +124,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="TeraDpsApi\EncounterBase.cs" />
+    <Compile Include="TeraDpsApi\ExcelExport.cs" />
+    <Compile Include="TeraDpsApi\Members.cs" />
+    <Compile Include="TeraDpsApi\SkillLog.cs" />
     <Compile Include="UI\Controls\CompactPlayerInfoControl.xaml.cs">
       <DependentUpon>CompactPlayerInfoControl.xaml</DependentUpon>
     </Compile>
