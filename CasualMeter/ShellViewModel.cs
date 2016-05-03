@@ -141,6 +141,12 @@ namespace CasualMeter
             set { SetProperty(value, onChanged: e => SettingsHelper.Instance.Settings.PartyOnly = value); }
         }
 
+        public bool SiteExport
+        {
+            get { return GetProperty(getDefault: () => SettingsHelper.Instance.Settings.SiteExport); }
+            set { SetProperty(value, onChanged: e => SettingsHelper.Instance.Settings.SiteExport = value); }
+        }
+
         public bool Excel
         {
             get { return GetProperty(getDefault: () => SettingsHelper.Instance.Settings.Excel); }

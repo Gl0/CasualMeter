@@ -51,7 +51,10 @@ namespace CasualMeter.Common.TeraDpsApi
             if (!(entity?.Info.Boss ?? false)) return;
 
             if (!SettingsHelper.Instance.Settings.Excel && 
-                (string.IsNullOrEmpty(SettingsHelper.Instance.Settings.TeraDpsToken) || string.IsNullOrEmpty(SettingsHelper.Instance.Settings.TeraDpsUser)))
+                (string.IsNullOrEmpty(SettingsHelper.Instance.Settings.TeraDpsToken) 
+                    || string.IsNullOrEmpty(SettingsHelper.Instance.Settings.TeraDpsUser)
+                    || !SettingsHelper.Instance.Settings.SiteExport)
+                )
             {
                 return;
             }
@@ -122,7 +125,7 @@ namespace CasualMeter.Common.TeraDpsApi
                 teradpsUser.playerClass = user.Class.ToString();
                 teradpsUser.playerName = user.Name;
                 teradpsUser.playerServer = SettingsHelper.Instance.BasicTeraData.Servers.GetServerName(user.Player.ServerId);
-                teradpsUser.playerAverageCritRate = 100 * (double)filteredSkillog.Count(x => x.IsCritical && x.Damage>0)/filteredSkillog.Count + "";
+                teradpsUser.playerAverageCritRate = Math.Round(100 * (double)filteredSkillog.Count(x => x.IsCritical && x.Damage>0)/filteredSkillog.Count, 1) + "";
                 teradpsUser.playerDps = TimeSpan.TicksPerSecond * damage / interval + "";
                 teradpsUser.playerTotalDamagePercentage = damage * 100 / totaldamage + "";
 
@@ -161,8 +164,8 @@ namespace CasualMeter.Common.TeraDpsApi
 
                     skillLog.skillAverageCrit = skill.AverageCrit + "";
                     skillLog.skillAverageWhite = skill.AverageWhite + "";
-                    skillLog.skillCritRate = skill.CritRate * 100 + "";
-                    skillLog.skillDamagePercent = skill.DamagePercent * 100 + "";
+                    skillLog.skillCritRate = Math.Round(skill.CritRate * 100, 1) + "";
+                    skillLog.skillDamagePercent = Math.Round(skill.DamagePercent * 100, 1) + "";
                     skillLog.skillHighestCrit = skill.HighestCrit + "";
                     skillLog.skillHits = skill.Hits + "";
                     skillLog.skillId = teraData.SkillDatabase.GetSkillByPetName(skill.NpcInfo?.Name,user.Player.RaceGenderClass)?.Id.ToString() ?? skill.SkillId.ToString();
@@ -179,7 +182,7 @@ namespace CasualMeter.Common.TeraDpsApi
                 var excelThread = new Thread(() => ExcelExport.ExcelSave(teradpsData, teraData));
                 excelThread.Start();
             }
-            if (string.IsNullOrEmpty(SettingsHelper.Instance.Settings.TeraDpsToken) || string.IsNullOrEmpty(SettingsHelper.Instance.Settings.TeraDpsUser)) return;
+            if (string.IsNullOrEmpty(SettingsHelper.Instance.Settings.TeraDpsToken) || string.IsNullOrEmpty(SettingsHelper.Instance.Settings.TeraDpsUser) || !SettingsHelper.Instance.Settings.SiteExport) return;
             string json = JsonConvert.SerializeObject(teradpsData);
             var sendThread = new Thread(() => Send(entity, json, 3));
             sendThread.Start();

@@ -209,6 +209,17 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0">Autoexport to teradps.io</TextBlock>
+                        <CheckBox Grid.Column="1" x:Name="SiteCheckBox"
+                                  IsChecked="{Binding SiteExport}"
+                                  HorizontalAlignment="Right"
+                                  Margin="0,6,1,0"/>
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0">Use Raw Sockets instead of WinPcap</TextBlock>
                         <CheckBox Grid.Column="1" x:Name="UseRawSocketsCheckBox"
                                   IsChecked="{Binding UseRawSockets}"

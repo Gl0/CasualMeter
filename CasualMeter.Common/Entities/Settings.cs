@@ -73,6 +73,9 @@ namespace CasualMeter.Common.Entities
         [DefaultValue("")]
         public string TeraDpsToken { get; set; }
 
+        [DefaultValue(true)]
+        public bool SiteExport { get; set; }
+
         //since you can't set DefaultValueAttribute on objects
         private HotKeySettings _hotkeys;
         public HotKeySettings HotKeys
