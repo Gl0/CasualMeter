@@ -184,7 +184,7 @@ namespace CasualMeter.Common.TeraDpsApi
                 excelThread.Start();
             }
             if (string.IsNullOrEmpty(SettingsHelper.Instance.Settings.TeraDpsToken) || string.IsNullOrEmpty(SettingsHelper.Instance.Settings.TeraDpsUser) || !SettingsHelper.Instance.Settings.SiteExport) return;
-            string json = JsonConvert.SerializeObject(teradpsData);
+            string json = JsonConvert.SerializeObject(teradpsData, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             var sendThread = new Thread(() => Send(entity, json, 3));
             sendThread.Start();
             //var jsonThread = new Thread(() => JsonExport(json));
