@@ -10,6 +10,7 @@ namespace CasualMeter.Common.TeraDpsApi
         public string playerDeaths;
         public string playerDeathDuration;
         public string aggro;
+        public string healCrit;
 
         public string playerName;
         public string playerDps;
