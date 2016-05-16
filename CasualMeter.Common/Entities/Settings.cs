@@ -62,9 +62,6 @@ namespace CasualMeter.Common.Entities
         public string Language { get; set; }
 
         [DefaultValue(false)]
-        public bool Excel { get; set; }
-
-        [DefaultValue(false)]
         public bool PartyOnly { get; set; }
 
         [DefaultValue("")]
@@ -72,6 +69,9 @@ namespace CasualMeter.Common.Entities
 
         [DefaultValue("")]
         public string TeraDpsToken { get; set; }
+
+        [DefaultValue(false)]
+        public bool ExcelExport { get; set; }
 
         [DefaultValue(true)]
         public bool SiteExport { get; set; }

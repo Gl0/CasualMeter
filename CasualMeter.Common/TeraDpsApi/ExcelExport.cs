@@ -15,14 +15,14 @@ namespace CasualMeter.Common.TeraDpsApi
     class ExcelExport
     {
         private static BasicTeraData BTD = SettingsHelper.Instance.BasicTeraData;
-        private static object savelock = new object();
+        private static readonly object Savelock = new object();
         public static void ExcelSave(EncounterBase data, TeraData teraData)
         {
-            lock (savelock) //can't save 2 excel files at one time
+            if (!SettingsHelper.Instance.Settings.ExcelExport) return;
+            lock (Savelock) //can't save 2 excel files at one time
             {
-                if (!SettingsHelper.Instance.Settings.Excel) return;
                 NpcInfo Boss = teraData.NpcDatabase.GetOrPlaceholder(ushort.Parse(data.areaId), uint.Parse(data.bossId));
-                var dir = Path.Combine(BTD.ResourceDirectory, $"logs/{Boss.Area.Replace(":", "-")}");
+                var dir = Path.Combine(SettingsHelper.Instance.GetDocumentsPath(), $"exports/{Boss.Area.Replace(":", "-")}");
                 Directory.CreateDirectory(dir);
                 var fname = Path.Combine(dir, $"{Boss.Name.Replace(":", "-")} {DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss", CultureInfo.InvariantCulture)}.xlsx");
                 FileInfo file = new FileInfo(fname);
@@ -55,7 +55,7 @@ namespace CasualMeter.Common.TeraDpsApi
                     {
                         i++;
                         ws.Cells[i, 1].Value = i - 2;
-                        AddImage(ws, i, 1, invert(new Bitmap(SettingsHelper.Instance.GetImage((PlayerClass)Enum.Parse(typeof(PlayerClass), user.playerClass)))));
+                        AddImage(ws, i, 1, Invert(new Bitmap(SettingsHelper.Instance.GetImage((PlayerClass)Enum.Parse(typeof(PlayerClass), user.playerClass)))));
                         ws.Cells[i, 2].Value = $"{user.playerServer}: {user.playerName}";
                         ws.Cells[i, 2].Hyperlink = CreateUserSheet(package.Workbook, user, teraData);
                         ws.Cells[i, 3].Value = long.Parse(user.playerDeaths);
@@ -111,7 +111,7 @@ namespace CasualMeter.Common.TeraDpsApi
                     ws.PrinterSettings.FitToPage = true;
                     package.Workbook.Properties.Title = Boss.Name;
                     package.Workbook.Properties.Author = "CasualMeter";
-                    package.Workbook.Properties.Company = "github.com/lunyx github.com/Gl0 github/neowutran";
+                    package.Workbook.Properties.Company = "github.com/lunyx github.com/Gl0 github.com/neowutran";
                     package.Save();
                 }
             }
@@ -121,7 +121,7 @@ namespace CasualMeter.Common.TeraDpsApi
             ExcelPicture picture = null;
             if (image != null)
             {
-                picture = ws.Drawings.AddPicture("pic" + rowIndex.ToString() + columnIndex.ToString(), image);
+                picture = ws.Drawings.AddPicture("pic" + rowIndex + columnIndex, image);
                 picture.From.Column = columnIndex-1;
                 picture.From.Row = rowIndex-1;
                 picture.From.ColumnOff = 12000;
@@ -136,7 +136,7 @@ namespace CasualMeter.Common.TeraDpsApi
             ws.DefaultRowHeight = 30;
             ws.Cells.Style.Font.Size = 14;
             ws.Cells.Style.Font.Name = "Arial";
-            AddImage(ws, 1, 1, invert(new Bitmap(SettingsHelper.Instance.GetImage((PlayerClass)Enum.Parse(typeof(PlayerClass), user.playerClass)))));
+            AddImage(ws, 1, 1, Invert(new Bitmap(SettingsHelper.Instance.GetImage((PlayerClass)Enum.Parse(typeof(PlayerClass), user.playerClass)))));
             ws.Cells[1, 2].Value = $"{user.playerServer}: {user.playerName}";
             ws.Cells[1, 2, 1, 10].Merge = true;
             ws.Cells[1, 2, 1, 10].Style.Font.Bold = true;
@@ -222,7 +222,7 @@ namespace CasualMeter.Common.TeraDpsApi
             return new ExcelHyperLink($"{user.playerName}!A1", $"{user.playerServer}: {user.playerName}");
         }
 
-        private static Bitmap invert(Bitmap image)
+        private static Bitmap Invert(Bitmap image)
         {
             if (image!=null)
             for (int k = 0; k < image.Width; k++)

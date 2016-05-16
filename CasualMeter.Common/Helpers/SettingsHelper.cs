@@ -21,6 +21,7 @@ namespace CasualMeter.Common.Helpers
         
         public static SettingsHelper Instance => Lazy.Value;
 
+        private static readonly string DocumentsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "CasualMeter");
         private static readonly string SettingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CasualMeter");
         private static readonly string ConfigFilePath = Path.Combine(SettingsPath, "settings.json");
 
@@ -85,6 +86,16 @@ namespace CasualMeter.Common.Helpers
         public string GetImage(PlayerClass @class)
         {
             return _classIcons[@class];
+        }
+
+        public string GetSettingsPath()
+        {
+            return SettingsPath;
+        }
+
+        public string GetDocumentsPath()
+        {
+            return DocumentsPath;
         }
     }
 }

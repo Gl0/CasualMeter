@@ -15,8 +15,8 @@ namespace CasualMeter.Common.Formatters
         public PlayerStatsFormatter(PlayerInfo playerInfo, TeraData teraData, FormatHelpers formatHelpers)
         {
             var placeHolders = new List<KeyValuePair<string, object>>();
-            placeHolders.Add(new KeyValuePair<string, object>("Name", playerInfo.Name));
             placeHolders.Add(new KeyValuePair<string, object>("FullName", playerInfo.FullName));
+            placeHolders.Add(new KeyValuePair<string, object>("Name", playerInfo.Name));
             placeHolders.Add(new KeyValuePair<string, object>("Class", playerInfo.Class));
 
             placeHolders.Add(new KeyValuePair<string, object>("Crits", playerInfo.Dealt.Crits));
@@ -36,7 +36,7 @@ namespace CasualMeter.Common.Formatters
             var deathDur = "";
             if (lastTick > firstTick && firstTick > 0)
             {
-                var buffs = playerInfo.Tracker.abnormals.Get(playerInfo.Player);
+                var buffs = playerInfo.Tracker.Abnormals.Get(playerInfo.Player);
                 AbnormalityDuration slaying;
                 buffs.Times.TryGetValue(teraData.HotDotDatabase.Get(8888889), out slaying);
                 double slayingperc = (double) (slaying?.Duration(firstTick, lastTick) ?? 0)/(lastTick - firstTick);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Tera.DamageMeter;
@@ -8,10 +9,7 @@ using Tera.Game.Messages;
 using Newtonsoft.Json;
 using Tera.Game;
 using System.Net.Http;
-using Newtonsoft.Json.Linq;
-using System.IO;
-using System.Globalization;
-using CasualMeter.Common;
+using System.Threading.Tasks;
 using CasualMeter.Common.Entities;
 using CasualMeter.Common.Helpers;
 using Lunyx.Common.UI.Wpf;
@@ -21,36 +19,13 @@ namespace CasualMeter.Common.TeraDpsApi
 {
     public class DataExporter
     {
-        public static void JsonExport(string json)
-        {
-            try
-            {
-                using (var client = new HttpClient())
-                {
-                    var response = client.PostAsync("http://cloud.neowutran.ovh:8083/store.php", new StringContent(
-                    json,
-                    Encoding.UTF8,
-                    "application/json")
-                    );
-                    var responseString = response.Result.Content.ReadAsStringAsync();
-                    Console.WriteLine(responseString.Result);
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                Console.WriteLine(e.StackTrace);
-            }
-        }
-
-
         public static void ToTeraDpsApi(SDespawnNpc despawnNpc, DamageTracker damageTracker, EntityTracker entityTracker, TeraData teraData)
         {
             if (!despawnNpc.Dead) return;
             var entity = entityTracker.GetOrPlaceholder(despawnNpc.Npc) as NpcEntity;
             if (!(entity?.Info.Boss ?? false)) return;
 
-            if (!SettingsHelper.Instance.Settings.Excel && 
+            if (!SettingsHelper.Instance.Settings.ExcelExport && 
                 (string.IsNullOrEmpty(SettingsHelper.Instance.Settings.TeraDpsToken) 
                     || string.IsNullOrEmpty(SettingsHelper.Instance.Settings.TeraDpsUser)
                     || !SettingsHelper.Instance.Settings.SiteExport)
@@ -60,7 +35,7 @@ namespace CasualMeter.Common.TeraDpsApi
             }
 
 
-            var abnormals = damageTracker.abnormals;
+            var abnormals = damageTracker.Abnormals;
             bool timedEncounter = false;
 
             //Nightmare desolarus
@@ -89,11 +64,13 @@ namespace CasualMeter.Common.TeraDpsApi
                         .Sum(x => x.Damage);
 
             var partyDps = TimeSpan.TicksPerSecond * totaldamage / interval;
-            var teradpsData = new EncounterBase();
-            teradpsData.areaId = entity.Info.HuntingZoneId+"";
-            teradpsData.bossId = entity.Info.TemplateId+"";
-            teradpsData.fightDuration = seconds + "";
-            teradpsData.partyDps = partyDps+"";
+            var teradpsData = new EncounterBase
+            {
+                areaId = entity.Info.HuntingZoneId + "",
+                bossId = entity.Info.TemplateId + "",
+                fightDuration = seconds + "",
+                partyDps = partyDps + ""
+            };
 
             foreach (var debuff in abnormals.Get(entity))
             {
@@ -109,11 +86,9 @@ namespace CasualMeter.Common.TeraDpsApi
 
             foreach (var user in damageTracker.StatsByUser)
             {
-                List<SkillResult> filteredSkillog;
-                if (timedEncounter)
-                    filteredSkillog = user.SkillLog.Where(x => x.Time >= firstHit && x.Time <= lastHit).ToList();
-                else
-                    filteredSkillog = user.SkillLog.Where(x => x.Target == entity).ToList();
+                var filteredSkillog = timedEncounter
+                    ? user.SkillLog.Where(x => x.Time >= firstHit && x.Time <= lastHit).ToList()
+                    : user.SkillLog.Where(x => x.Target == entity).ToList();
 
                 long damage=filteredSkillog.Sum(x => x.Damage);
                 if (damage <= 0) continue;
@@ -178,24 +153,20 @@ namespace CasualMeter.Common.TeraDpsApi
                 teradpsData.members.Add(teradpsUser);
             }
 
-            if (SettingsHelper.Instance.Settings.Excel)
+            if (SettingsHelper.Instance.Settings.ExcelExport)
             {
-                var excelThread = new Thread(() => ExcelExport.ExcelSave(teradpsData, teraData));
-                excelThread.Start();
+                Task.Run(() => ExcelExport.ExcelSave(teradpsData, teraData));
             }
             if (string.IsNullOrEmpty(SettingsHelper.Instance.Settings.TeraDpsToken) || string.IsNullOrEmpty(SettingsHelper.Instance.Settings.TeraDpsUser) || !SettingsHelper.Instance.Settings.SiteExport) return;
             string json = JsonConvert.SerializeObject(teradpsData, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-            var sendThread = new Thread(() => Send(entity, json, 3));
-            sendThread.Start();
-            //var jsonThread = new Thread(() => JsonExport(json));
-            //jsonThread.Start();
+            Task.Run(() => Send(entity, json, 3));
         }
 
         private static void Send(NpcEntity boss, string json, int numberTry)
         {
             if(numberTry == 0)
             {
-                Console.WriteLine("API ERROR");
+                Debug.WriteLine("API ERROR");
                 return;
             }
             try {
@@ -212,21 +183,22 @@ namespace CasualMeter.Common.TeraDpsApi
                     );
 
                     var responseString = response.Result.Content.ReadAsStringAsync();
-                    Console.WriteLine(responseString.Result);
+                    Debug.WriteLine(responseString.Result);
                     Dictionary<string, object> responseObject = JsonConvert.DeserializeObject<Dictionary<string,object>>(responseString.Result);
                     if (responseObject.ContainsKey("id"))
                     {
-                        Console.WriteLine((string)responseObject["id"] + " " + boss.Info.Name);
+                        Debug.WriteLine((string)responseObject["id"] + " " + boss.Info.Name);
                     }
-                    else {
-                        Console.WriteLine("!" + (string)responseObject["message"] +" "+ boss.Info.Name + " "+DateTime.Now.Ticks);
-                   }
+                    else
+                    {
+                        Debug.WriteLine("!" + (string)responseObject["message"] +" "+ boss.Info.Name + " " +DateTime.Now.Ticks);
+                    }
                 }
             }
             catch(Exception e)
             {
-                Console.WriteLine(e.Message);
-                Console.WriteLine(e.StackTrace);
+                Debug.WriteLine(e.Message);
+                Debug.WriteLine(e.StackTrace);
                 Send(boss, json, numberTry - 1);
             }
         }

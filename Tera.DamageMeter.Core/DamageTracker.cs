@@ -25,7 +25,7 @@ namespace Tera.DamageMeter
             set { SetProperty(value); }
         }
 
-        public AbnormalityStorage abnormals
+        public AbnormalityStorage Abnormals
         {
             get { return GetProperty<AbnormalityStorage>(); }
             set { SetProperty(value); }
