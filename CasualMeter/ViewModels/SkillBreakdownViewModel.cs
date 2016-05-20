@@ -145,8 +145,8 @@ namespace CasualMeter.ViewModels
                 }
                 if (AggregatedSkillLogByName.All(asr => !skillResult.IsSameSkillAs(asr)))
                 {
-                    AggregatedSkillLogByName.Add(new AggregatedSkillResult(skillResult.SkillName, skillResult.IsHeal,
-                        AggregationType.Name, SkillLog));
+                    AggregatedSkillLogByName.Add(new AggregatedSkillResult(skillResult.SkillShortName, 
+                        skillResult.IsHeal, AggregationType.Name, SkillLog));
                 }
             }
         }
