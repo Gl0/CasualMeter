@@ -137,7 +137,7 @@ namespace CasualMeter.Common.TeraDpsApi
         }
         private static ExcelHyperLink CreateUserSheet(ExcelWorkbook wb, Members user, TeraData teraData)
         {
-            ExcelWorksheet ws = wb.Worksheets.Add($"{user.playerName}");
+            ExcelWorksheet ws = wb.Worksheets.Add($"{user.playerServer}_{user.playerName}");
             var rgc = new RaceGenderClass("Common", "Common", user.playerClass);
             ws.DefaultRowHeight = 30;
             ws.Cells.Style.Font.Size = 14;
@@ -234,7 +234,7 @@ namespace CasualMeter.Common.TeraDpsApi
             ws.Cells[1, 1, j, 10].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
             ws.Cells[1, 1, j, 10].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
             ws.PrinterSettings.FitToPage = true;
-            return new ExcelHyperLink($"{user.playerName}!A1", $"{user.playerServer}: {user.playerName}");
+            return new ExcelHyperLink($"'{user.playerServer}_{user.playerName}'!A1", $"{user.playerServer}: {user.playerName}");
         }
 
         private static double GetTrueColumnWidth(double width)

@@ -514,6 +514,7 @@ namespace CasualMeter
                 _abnormalityTracker = new AbnormalityTracker(_entityTracker, _playerTracker, _teraData.HotDotDatabase, _abnormalityStorage, CheckUpdate);
                 _charmTracker = new CharmTracker(_abnormalityTracker);
                 Server = BasicTeraData.Servers.GetServer(sLogin.ServerId,Server);
+                Logger.Info($"Logged in to server {Server.Name}.");
                 return;
             }
         }
