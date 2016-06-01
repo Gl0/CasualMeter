@@ -173,7 +173,7 @@ namespace CasualMeter.Common.TeraDpsApi
                 return;
             }
 
-            if (int.Parse(teradpsData.partyDps) < 2000000)
+            if (int.Parse(teradpsData.partyDps) < 2000000 && areaId != 468)
             {
                 return;
             }

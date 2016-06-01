@@ -310,7 +310,7 @@ namespace CasualMeter
             var despawnNpc = message as SDespawnNpc;
             if (despawnNpc != null)
             {
-                Entity ent = _entityTracker.GetOrPlaceholder(despawnNpc.NPC);
+                Entity ent = _entityTracker.GetOrPlaceholder(despawnNpc.Npc);
                 if (ent is NpcEntity)
                 {
                     _abnormalityTracker.StopAggro(despawnNpc);
@@ -499,12 +499,20 @@ namespace CasualMeter
             _entityTracker.Update(message);
             _playerTracker.UpdateParty(message);
 
+            var sSpawnUser = message as SpawnUserServerMessage;
+            if (sSpawnUser != null)
+            {
+                _abnormalityTracker.RegisterDead(sSpawnUser.Id, sSpawnUser.Time.Ticks, sSpawnUser.Dead);
+                //Debug.WriteLine(sSpawnUser.Name + " : " + BitConverter.ToString(BitConverter.GetBytes(sSpawnUser.Id.Id)) + " : " + BitConverter.ToString(BitConverter.GetBytes(sSpawnUser.ServerId)) + " " + BitConverter.ToString(BitConverter.GetBytes(sSpawnUser.PlayerId)));
+                return;
+            }
             var spawnMe = message as SpawnMeServerMessage;
             if (spawnMe != null)
             {
                 _abnormalityStorage.EndAll(message.Time.Ticks);
                 _abnormalityTracker = new AbnormalityTracker(_entityTracker, _playerTracker, _teraData.HotDotDatabase, _abnormalityStorage, CheckUpdate);
                 _charmTracker = new CharmTracker(_abnormalityTracker);
+                _abnormalityTracker.RegisterDead(spawnMe.Id, spawnMe.Time.Ticks, spawnMe.Dead);
                 return;
             }
             var sLogin = message as LoginServerMessage;
