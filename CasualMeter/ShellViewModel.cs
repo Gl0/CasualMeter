@@ -113,6 +113,22 @@ namespace CasualMeter
             }
         }
 
+        public bool DetectBosses
+        {
+            get { return GetProperty(getDefault: () => SettingsHelper.Instance.Settings.DetectBosses); }
+            set
+            {
+                SetProperty(value, onChanged: e =>
+                {
+                    SettingsHelper.Instance.Settings.DetectBosses = value;
+                    if (_teraData?.NpcDatabase != null)
+                    {
+                        _teraData.NpcDatabase.DetectBosses = value;
+                    }
+                });
+            }
+        }
+
         public bool IgnoreOneshots
         {
             get { return GetProperty(getDefault: () => SettingsHelper.Instance.Settings.IgnoreOneshots); }
@@ -357,6 +373,8 @@ namespace CasualMeter
                 return;
             }
 
+            _entityTracker.Update(message);
+
             var changeHp = message as SCreatureChangeHp;
             if (changeHp != null)
             {
@@ -496,7 +514,6 @@ namespace CasualMeter
                 return;
             }
 
-            _entityTracker.Update(message);
             _playerTracker.UpdateParty(message);
 
             var sSpawnUser = message as SpawnUserServerMessage;

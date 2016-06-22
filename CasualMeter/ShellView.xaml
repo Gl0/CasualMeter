@@ -168,6 +168,17 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0">Detect Bosses via HP bar (ignore db)</TextBlock>
+                        <CheckBox Grid.Column="1" x:Name="DetectBossesCheckBox"
+                                  IsChecked="{Binding DetectBosses}"
+                                  HorizontalAlignment="Right"
+                                  Margin="0,6,1,0"/>
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0">Count Only Party</TextBlock>
                         <CheckBox Grid.Column="1" x:Name="PartyOnlyCheckBox"
                                   IsChecked="{Binding PartyOnly}"

@@ -73,6 +73,9 @@ namespace CasualMeter.Common.Entities
         [DefaultValue(false)]
         public bool ExcelExport { get; set; }
 
+        [DefaultValue(false)]
+        public bool DetectBosses { get; set; }
+
         [DefaultValue(true)]
         public bool SiteExport { get; set; }
 

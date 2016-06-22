@@ -25,13 +25,13 @@ namespace Tera.Data
             return _dataForRegion(region);
         }
 
-        public BasicTeraData(string overridesDirectory,string language)
+        public BasicTeraData(string overridesDirectory,string language, bool detectBosses)
         {
             ResourceDirectory = FindResourceDirectory();
             Language = language;
             Icons=new IconsDatabase(ResourceDirectory);
             _overridesDirectory = overridesDirectory;
-            _dataForRegion = Helpers.Memoize<string, TeraData>(region => new TeraData(this, region));
+            _dataForRegion = Helpers.Memoize<string, TeraData>(region => new TeraData(this, region, detectBosses));
             LoadServers();
         }
 

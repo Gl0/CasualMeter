@@ -37,7 +37,7 @@ namespace CasualMeter.Common.Helpers
             _jsonSerializerSettings = new JsonSerializerSettings {DefaultValueHandling = DefaultValueHandling.Populate};
 
             Load();
-            BasicTeraData = new BasicTeraData(SettingsPath,Settings.Language);
+            BasicTeraData = new BasicTeraData(SettingsPath, Settings.Language, Settings.DetectBosses);
             LoadClassIcons();
         }
 

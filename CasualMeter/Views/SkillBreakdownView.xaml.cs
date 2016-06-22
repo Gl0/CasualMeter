@@ -107,6 +107,11 @@ namespace CasualMeter.Views
                     });
                     SkillResultsGrid.Columns.Add(new DataGridTextColumn
                     {
+                        Header = "Dir",
+                        Binding = new Binding(nameof(SkillResult.HitDirection))
+                    });
+                    SkillResultsGrid.Columns.Add(new DataGridTextColumn
+                    {
                         Header = "Amount",
                         Binding = new Binding(nameof(SkillResult.Amount))
                         {
