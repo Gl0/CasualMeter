@@ -27,6 +27,7 @@ using Tera;
 using Tera.DamageMeter;
 using Tera.Data;
 using Tera.Game;
+using Tera.Game.Abnormality;
 using Tera.Game.Messages;
 using Tera.Sniffing;
 

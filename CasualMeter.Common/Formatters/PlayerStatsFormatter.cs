@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using CasualMeter.Common.Helpers;
 using Tera.DamageMeter;
 using Tera.Data;
-using Tera.Game;
+using Tera.Game.Abnormality;
 
 namespace CasualMeter.Common.Formatters
 {

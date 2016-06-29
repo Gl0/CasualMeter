@@ -11,6 +11,7 @@ using log4net;
 using Lunyx.Common.UI.Wpf;
 using Nicenis.ComponentModel;
 using Tera.Game;
+using Tera.Game.Abnormality;
 
 namespace Tera.DamageMeter
 {
