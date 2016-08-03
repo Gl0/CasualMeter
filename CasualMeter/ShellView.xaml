@@ -56,7 +56,7 @@
             </CollectionViewSource>
         </Grid.Resources>
         <tb:TaskbarIcon IconSource="Resources/CasualMeter.ico"
-                        ToolTipText="Casual Meter"
+                        ToolTipText="{Binding ApplicationFullName}"
                         ContextMenu="{StaticResource MainMenu}"
                         DoubleClickCommand="{Binding ToggleIsPinnedCommand}">
         </tb:TaskbarIcon>
@@ -333,7 +333,7 @@
                                       ItemsSource="{Binding Source={StaticResource SavedEncountersView}}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Button Style="{StaticResource EncounterButtonStyle}" ToolTip="{Binding Path=Name}">
+                                    <Button Style="{StaticResource EncounterButtonStyle}" ToolTip="{Binding Path=PrimaryTarget.Info.Name}">
                                         <i:Interaction.Triggers>
                                             <i:EventTrigger EventName="Click">
                                                 <i:InvokeCommandAction Command="{Binding ShellViewModel.LoadEncounterCommand, RelativeSource={RelativeSource AncestorType={x:Type controls:CasualMeterWindow}}}"

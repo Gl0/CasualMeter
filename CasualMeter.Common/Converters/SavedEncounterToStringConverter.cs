@@ -20,7 +20,7 @@ namespace CasualMeter.Common.Converters
             if (tracker.FirstAttack == null) throw new ArgumentNullException($"FirstAttack should never be null in a saved encounter.");
 
             var formatHelper = FormatHelpers.Pretty;
-            return $"{tracker.FirstAttack.Value.ToLocalTime().ToString("T")} | {formatHelper.FormatValue(tracker.TotalDealt.Damage)} | {formatHelper.FormatValue(tracker.CalculateDps(tracker.TotalDealt.Damage))}/s{formatHelper.FormatName(tracker.Name)}";
+            return $"{tracker.FirstAttack.Value.ToLocalTime().ToString("T")} | {formatHelper.FormatValue(tracker.TotalDealt.Damage)} | {formatHelper.FormatValue(tracker.CalculateDps(tracker.TotalDealt.Damage))}/s{formatHelper.FormatName(tracker.PrimaryTarget?.Info.Name)}";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

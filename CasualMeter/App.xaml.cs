@@ -50,7 +50,6 @@ namespace CasualMeter
             }
         }
 
- 
         private static void HandleException(Exception e)
         {
             if (e == null) return;

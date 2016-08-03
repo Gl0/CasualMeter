@@ -6,6 +6,8 @@
 Here are some of the features that are currently implemented:
 * View damage dealt, damage healed, dps, total damage
 * View detailed skill breakdown with three different views
+* Export detailed breakdown to Excel, with buff/debuff uptimes
+* Upload encounters to teradps.io
 * Will only show up while you are playing Tera
 * Paste dps
 * Review previous encounters

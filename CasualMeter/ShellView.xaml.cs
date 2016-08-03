@@ -43,6 +43,9 @@ namespace CasualMeter
 
         protected override void OnInitialized(EventArgs e)
         {
+            //clean up temp folder in background in case app was force closed
+            Task.Run(() => CleanTempFolder());
+
             //ensure initialization of helpers
             SettingsHelper.Instance.Initialize();
             HotkeyHelper.Instance.Initialize();
@@ -77,6 +80,41 @@ namespace CasualMeter
             SettingsHelper.Instance.Save();
         }
 
+        private void CleanTempFolder()
+        {
+            var tempDirPath = SettingsHelper.Instance.GetTempFolderPath();
+            if (Directory.Exists(tempDirPath))
+            {
+                try
+                {
+                    DeleteDirectory(tempDirPath);
+                }
+                catch
+                {
+                    // eat this
+                }
+            }    
+        }
+
+        private void DeleteDirectory(string targetDir)
+        {
+            string[] files = Directory.GetFiles(targetDir);
+            string[] dirs = Directory.GetDirectories(targetDir);
+
+            foreach (string file in files)
+            {
+                File.SetAttributes(file, FileAttributes.Normal);
+                File.Delete(file);
+            }
+
+            foreach (string dir in dirs)
+            {
+                DeleteDirectory(dir);
+            }
+
+            Directory.Delete(targetDir, false);
+        }
+
         /// <summary>
         /// Fixes the Top position of the Window.
         /// bug: this needs to happen when resuming Windows and unlocking the computer
@@ -99,6 +137,7 @@ namespace CasualMeter
         private void Exit_OnClick(object sender, RoutedEventArgs e)
         {
             SaveUiSettings();
+            CleanTempFolder();
             Close();
         }
 

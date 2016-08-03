@@ -20,6 +20,8 @@ namespace Tera.DamageMeter
         private static readonly ILog Logger = LogManager.GetLogger
             (MethodBase.GetCurrentMethod().DeclaringType);
 
+        private readonly IDictionary<NpcEntity, long> _targetHitCount = new Dictionary<NpcEntity, long>();
+
         public ThreadSafeObservableCollection<PlayerInfo> StatsByUser
         {
             get { return GetProperty(getDefault: () => new ThreadSafeObservableCollection<PlayerInfo>()); }
@@ -33,19 +35,19 @@ namespace Tera.DamageMeter
         }
 
         public bool OnlyBosses {
-            get { return GetProperty<bool>(getDefault: () => false); }
+            get { return GetProperty(getDefault: () => false); }
             set { SetProperty(value); }
         }
 
         public bool IgnoreOneshots
         {
-            get { return GetProperty<bool>(getDefault: () => true); }
+            get { return GetProperty(getDefault: () => true); }
             set { SetProperty(value); }
         }
 
         public bool IsArchived
         {
-            get { return GetProperty<bool>(getDefault: () => false); }
+            get { return GetProperty(getDefault: () => false); }
             set { SetProperty(value); }
         }
 
@@ -75,7 +77,7 @@ namespace Tera.DamageMeter
 
         public TimeSpan Duration
         {
-            get { return GetProperty<TimeSpan>(getDefault: () => TimeSpan.Zero); }
+            get { return GetProperty(getDefault: () => TimeSpan.Zero); }
             set { SetProperty(value); }
         }
 
@@ -85,9 +87,25 @@ namespace Tera.DamageMeter
             set { SetProperty(value); }
         }
 
+        public NpcEntity PrimaryTarget
+        {
+            get { return GetProperty<NpcEntity>(); }
+            set { SetProperty(value); }
+        }
+
+        public bool IsPrimaryTargetDead
+        {
+            get { return GetProperty(getDefault: () => false); }
+            set { SetProperty(value); }
+        }
+
         private PlayerInfo GetOrCreate(SkillResult skillResult)
         {
             NpcEntity npctarget = skillResult.Target as NpcEntity;
+
+            //ignore pvp if onlybosses is ticked
+            if (OnlyBosses && npctarget == null && IsValidAttack(skillResult)) return null;
+
             if (npctarget != null)
             {
                 if (OnlyBosses)//not count bosses
@@ -104,6 +122,16 @@ namespace Tera.DamageMeter
             {
                 playerStats = new PlayerInfo(player, this);
                 StatsByUser.Add(playerStats);
+            }
+
+            //update primary target if it's a mob
+            if (npctarget != null)
+            {
+                if (!_targetHitCount.ContainsKey(npctarget))
+                    _targetHitCount.Add(npctarget, 0);
+                _targetHitCount[npctarget]++;
+
+                PrimaryTarget = _targetHitCount.Aggregate((l, r) => l.Value > r.Value ? l : r).Key;
             }
             return playerStats;
         }
@@ -146,8 +174,8 @@ namespace Tera.DamageMeter
 
         public bool IsValidAttack(SkillResult skillResult)
         {
-            return skillResult.SourcePlayer != null && (skillResult.Damage > 0) &&
-                   (skillResult.Source.Id != skillResult.Target.Id);
+            return skillResult.SourcePlayer != null && skillResult.Damage > 0 &&
+                   skillResult.Source.Id != skillResult.Target.Id;
         }
 
         private SkillStats StatsChange(SkillResult message)
@@ -182,6 +210,5 @@ namespace Tera.DamageMeter
             var dps = damage / durationInSeconds;
             return (long)dps;
         }
-        public string Name { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Input;
 using CasualMeter.Common.Conductors;
+using CasualMeter.Common.Conductors.Messages;
 using CasualMeter.Common.Entities;
 using GlobalHotKey;
 using log4net;
@@ -48,6 +49,8 @@ namespace CasualMeter.Common.Helpers
                 Register(HotKeys.ModifierPaste, HotKeys.Paste, CasualMessenger.Instance.PastePlayerStats);
                 Register(HotKeys.ModifierReset, HotKeys.Reset, () => CasualMessenger.Instance.ResetPlayerStats(false));
                 Register(HotKeys.ModifierSave, HotKeys.Save, () => CasualMessenger.Instance.ResetPlayerStats(true));
+                Register(HotKeys.ModifierUpload, HotKeys.Upload, () => CasualMessenger.Instance.ExportStats(ExportType.Upload));
+                Register(HotKeys.ModifierDetails, HotKeys.Details, () => CasualMessenger.Instance.ExportStats(ExportType.ExcelTemp));
             }
         }
 
@@ -59,6 +62,8 @@ namespace CasualMeter.Common.Helpers
                 Unregister(HotKeys.ModifierPaste, HotKeys.Paste);
                 Unregister(HotKeys.ModifierReset, HotKeys.Reset);
                 Unregister(HotKeys.ModifierSave, HotKeys.Save);
+                Unregister(HotKeys.ModifierUpload, HotKeys.Upload);
+                Unregister(HotKeys.ModifierDetails, HotKeys.Details);
             }
         }
 

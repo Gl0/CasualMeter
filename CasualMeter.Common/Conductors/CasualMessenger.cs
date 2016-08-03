@@ -49,5 +49,12 @@ namespace CasualMeter.Common.Conductors
             }, sender);
         }
 
+        public void ExportStats(ExportType type)
+        {
+            Messenger.Send(new ExportStatsMessage
+            {
+                ExportType = type
+            });
+        }
     }
 }

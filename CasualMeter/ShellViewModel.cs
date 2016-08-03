@@ -1,18 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.NetworkInformation;
-using System.Net.Sockets;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Data;
-using System.Windows.Threading;
 using CasualMeter.Common.Conductors;
 using CasualMeter.Common.Conductors.Messages;
 using CasualMeter.Common.Formatters;
@@ -20,7 +13,6 @@ using CasualMeter.Common.Helpers;
 using CasualMeter.Common.UI.ViewModels;
 using CasualMeter.Common.TeraDpsApi;
 using GalaSoft.MvvmLight.CommandWpf;
-using log4net;
 using Lunyx.Common.UI.Wpf;
 using NetworkSniffer;
 using Tera;
@@ -43,16 +35,18 @@ namespace CasualMeter
         private AbnormalityTracker _abnormalityTracker;
         private CharmTracker _charmTracker;
         private readonly AbnormalityStorage _abnormalityStorage = new AbnormalityStorage();
-
-        private Stopwatch _inactivityTimer = new Stopwatch();
+        private readonly Stopwatch _inactivityTimer = new Stopwatch();
 
         public ShellViewModel()
         {
             CasualMessenger.Instance.Messenger.Register<PastePlayerStatsMessage>(this, PasteStats);
             CasualMessenger.Instance.Messenger.Register<ResetPlayerStatsMessage>(this, ResetDamageTracker);
+            CasualMessenger.Instance.Messenger.Register<ExportStatsMessage>(this, ExportStats);
         }
 
         #region Properties
+
+        public string ApplicationFullName => $"Casual Meter {SettingsHelper.Instance.Version}";
 
         public BasicTeraData BasicTeraData
         {
@@ -241,6 +235,7 @@ namespace CasualMeter
         #endregion
 
         private object _snifferLock = new object();
+        private bool _needInit;
 
         public void Initialize()
         {
@@ -277,19 +272,14 @@ namespace CasualMeter
         private void HandleNewConnection(Server server)
         {
             Server = server;
-            _teraData = BasicTeraData.DataForRegion(server.Region);
-            _entityTracker = new EntityTracker(_teraData.NpcDatabase);
-            _playerTracker = new PlayerTracker(_entityTracker,BasicTeraData.Servers);
-            _messageFactory = new MessageFactory(_teraData.OpCodeNamer);
-
+            _messageFactory = new MessageFactory();
             ResetDamageTracker();
             DamageTracker = DamageTracker ?? new DamageTracker
             {
                 OnlyBosses = OnlyBosses,
                 IgnoreOneshots = IgnoreOneshots
             };
-            _abnormalityTracker = new AbnormalityTracker(_entityTracker, _playerTracker, _teraData.HotDotDatabase, _abnormalityStorage, CheckUpdate);
-            _charmTracker = new CharmTracker(_abnormalityTracker);
+            _needInit = true;
             Logger.Info($"Connected to server {server.Name}.");
         }
 
@@ -297,7 +287,7 @@ namespace CasualMeter
         {
             if (Server == null) return;
 
-            bool saveEncounter = message != null && message.ShouldSaveCurrent;
+            var saveEncounter = message != null && message.ShouldSaveCurrent;
             if (saveEncounter && !DamageTracker.IsArchived && DamageTracker.StatsByUser.Count > 0 && 
                 DamageTracker.FirstAttack != null && DamageTracker.LastAttack != null)
             {
@@ -320,6 +310,13 @@ namespace CasualMeter
             };
         }
 
+        private void ExportStats(ExportStatsMessage message)
+        {
+            if (!DamageTracker.IsArchived)
+                ResetDamageTracker(new ResetPlayerStatsMessage {ShouldSaveCurrent = true});
+            DataExporter.ToTeraDpsApi(message.ExportType, DamageTracker, _teraData);
+        }
+
         private void HandleMessageReceived(Message obj)
         {
             var message = _messageFactory.Create(obj);
@@ -337,14 +334,26 @@ namespace CasualMeter
                     {   //no need to do something if we didn't count any skill against this boss
                         if (DamageTracker.StatsByUser.SelectMany(x => x.SkillLog).Any(x => x.Target == npce))
                         {
-                            DataExporter.ToTeraDpsApi(despawnNpc, DamageTracker, _entityTracker, _teraData);
-                            DamageTracker.Name = npce.Info.Name; //Name encounter with the last dead boss
-                            if (AutosaveEncounters) CasualMessenger.Instance.ResetPlayerStats(true);
+                            DamageTracker.PrimaryTarget = npce; //Name encounter with the last dead boss
+                            DamageTracker.IsPrimaryTargetDead = despawnNpc.Dead;
+
+                            //determine type
+                            ExportType exportType = ExportType.None;
+                            if (SettingsHelper.Instance.Settings.ExcelExport)
+                                exportType = exportType | ExportType.Excel;
+                            if (SettingsHelper.Instance.Settings.SiteExport)
+                                exportType = exportType | ExportType.Upload;
+                            
+                            if (exportType != ExportType.None)
+                                DataExporter.ToTeraDpsApi(exportType, DamageTracker, _teraData);
+                            if (AutosaveEncounters)
+                                ResetDamageTracker(new ResetPlayerStatsMessage {ShouldSaveCurrent = true});
                         }
                     }
                 }
                 return;
             }
+
             if (DamageTracker.IsArchived)
             { 
                 var npcOccupier = message as SNpcOccupierInfo;
@@ -363,6 +372,8 @@ namespace CasualMeter
                 }
             }
 
+            _entityTracker?.Update(message);
+
             var skillResultMessage = message as EachSkillResultServerMessage;
             if (skillResultMessage != null)
             {
@@ -373,8 +384,6 @@ namespace CasualMeter
                 }
                 return;
             }
-
-            _entityTracker.Update(message);
 
             var changeHp = message as SCreatureChangeHp;
             if (changeHp != null)
@@ -515,7 +524,7 @@ namespace CasualMeter
                 return;
             }
 
-            _playerTracker.UpdateParty(message);
+            _playerTracker?.UpdateParty(message);
 
             var sSpawnUser = message as SpawnUserServerMessage;
             if (sSpawnUser != null)
@@ -536,21 +545,48 @@ namespace CasualMeter
             var sLogin = message as LoginServerMessage;
             if (sLogin != null)
             {
+                if (_needInit)
+                {
+                    Server = BasicTeraData.Servers.GetServer(sLogin.ServerId, Server);
+                    Logger.Info($"Logged in to server {Server.Name}.");
+                    _teraData = BasicTeraData.DataForRegion(Server.Region);
+                    _entityTracker = new EntityTracker(_teraData.NpcDatabase);
+                    _playerTracker = new PlayerTracker(_entityTracker, BasicTeraData.Servers);
+                    _abnormalityTracker = new AbnormalityTracker(_entityTracker, _playerTracker, _teraData.HotDotDatabase, _abnormalityStorage, CheckUpdate);
+                    _charmTracker = new CharmTracker(_abnormalityTracker);
+                    _entityTracker.Update(message);
+                    _playerTracker.UpdateParty(message);
+                    _needInit = false;
+                }
                 _abnormalityStorage.EndAll(message.Time.Ticks);
                 _abnormalityTracker = new AbnormalityTracker(_entityTracker, _playerTracker, _teraData.HotDotDatabase, _abnormalityStorage, CheckUpdate);
                 _charmTracker = new CharmTracker(_abnormalityTracker);
-                Server = BasicTeraData.Servers.GetServer(sLogin.ServerId,Server);
-                Logger.Info($"Logged in to server {Server.Name}.");
+                return;
+            }
+            var cVersion = message as C_CHECK_VERSION;
+            if (cVersion != null)
+            {
+                var opCodeNamer =
+                    new OpCodeNamer(Path.Combine(BasicTeraData.ResourceDirectory,
+                        $"opcodes/{cVersion.Versions[0]}.txt"));
+                _messageFactory = new MessageFactory(opCodeNamer, cVersion.Versions[0]);
                 return;
             }
         }
 
+        private bool IsInactiveTimerReached()
+        {
+            return SettingsHelper.Instance.Settings.InactivityResetDuration > 0 
+                && _inactivityTimer.Elapsed >
+                   TimeSpan.FromSeconds(SettingsHelper.Instance.Settings.InactivityResetDuration);
+        }
+
         private void CheckUpdate(SkillResult skillResult)
         {
-            if (PartyOnly && !(_playerTracker.MyParty(skillResult.SourcePlayer) || _playerTracker.MyParty(skillResult.TargetPlayer))) return;
-            if (SettingsHelper.Instance.Settings.InactivityResetDuration > 0
-            && _inactivityTimer.Elapsed > TimeSpan.FromSeconds(SettingsHelper.Instance.Settings.InactivityResetDuration)
-            && skillResult.IsValid())
+            if (PartyOnly &&//check if party only
+                !(_playerTracker.MyParty(skillResult.SourcePlayer) || _playerTracker.MyParty(skillResult.TargetPlayer)))
+                return;
+            if (IsInactiveTimerReached() && skillResult.IsValid())
             {
                 CasualMessenger.Instance.ResetPlayerStats(AutosaveEncounters || DamageTracker.IsArchived);
             }

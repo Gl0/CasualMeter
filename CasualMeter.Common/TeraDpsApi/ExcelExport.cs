@@ -1,133 +1,150 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using CasualMeter.Common.Conductors.Messages;
 using CasualMeter.Common.Helpers;
 using Tera.Data;
 using Tera.Game;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
-using OfficeOpenXml.Drawing;
 
 namespace CasualMeter.Common.TeraDpsApi
 {
-    class ExcelExport
+    public static class ExcelExport
     {
         private static BasicTeraData BTD = SettingsHelper.Instance.BasicTeraData;
         private static readonly object Savelock = new object();
-        public static void ExcelSave(EncounterBase data, TeraData teraData)
+        public static void ExcelSave(ExportType exportType, EncounterBase data, TeraData teraData)
         {
-            if (!SettingsHelper.Instance.Settings.ExcelExport) return;
+            if ((exportType & (ExportType.Excel | ExportType.ExcelTemp)) == 0) return;
             lock (Savelock) //can't save 2 excel files at one time
             {
-                NpcInfo Boss = teraData.NpcDatabase.GetOrPlaceholder(ushort.Parse(data.areaId), uint.Parse(data.bossId));
-                var dir = Path.Combine(SettingsHelper.Instance.GetDocumentsPath(), $"exports/{Boss.Area.Replace(":", "-")}");
+                NpcInfo boss = teraData.NpcDatabase.GetOrPlaceholder(ushort.Parse(data.areaId), uint.Parse(data.bossId));
+                var dir =
+                    Path.Combine(
+                        exportType.HasFlag(ExportType.Excel)//if regular export, save in documents, otherwise temp
+                            ? SettingsHelper.Instance.GetDocumentsPath()
+                            : SettingsHelper.Instance.GetTempFolderPath(), $"exports/{boss.Area.Replace(":", "-")}");
                 Directory.CreateDirectory(dir);
-                var fname = Path.Combine(dir, $"{Boss.Name.Replace(":", "-")} {DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss", CultureInfo.InvariantCulture)}.xlsx");
+                var fname = Path.Combine(dir, $"{boss.Name.Replace(":", "-")} {data.encounterDateTime.ToLocalTime().ToString("yyyy-MM-dd HH-mm-ss", CultureInfo.InvariantCulture)}.xlsx");
                 FileInfo file = new FileInfo(fname);
-                if (file.Exists) return; //the only case this can happen is BAM mobtraining, that's not so interesting statistic to deal with more complex file names.
-                using (ExcelPackage package = new ExcelPackage(file))
+                if (!file.Exists)
                 {
-                    ExcelWorksheet ws = package.Workbook.Worksheets.Add("Boss");
-                    var linkStyle = package.Workbook.Styles.CreateNamedStyle("HyperLink");   //This one is language dependent
-                    linkStyle.Style.Font.UnderLine = true;
-                    linkStyle.Style.Font.Color.SetColor(Color.Blue);
-                    ws.DefaultRowHeight = 30;
-                    ws.Cells.Style.Font.Size = 14;
-                    ws.Cells.Style.Font.Name = "Arial";
-                    ws.Cells[1, 1].Value = $"{Boss.Area}: {Boss.Name} {TimeSpan.FromSeconds(double.Parse(data.fightDuration)).ToString(@"mm\:ss")}";
-                    ws.Cells[1, 1, 1, 6].Merge = true;
-                    ws.Cells[1, 1, 1, 8].Style.Font.Bold = true;
-                    ws.Cells[1, 7].Value = long.Parse(data.partyDps);
-                    ws.Cells[1, 7].Style.Numberformat.Format = @"#,#00,\k\/\s";
-                    ws.Cells[2, 1].Value = "Ic";
-                    ws.Cells[2, 1].Style.Font.Color.SetColor(Color.Transparent);
-                    ws.Cells[2, 2].Value = "Name";
-                    ws.Cells[2, 3].Value = "Deaths";
-                    ws.Cells[2, 4].Value = "Death time";
-                    ws.Cells[2, 5].Value = "Damage %";
-                    ws.Cells[2, 6].Value = "Crit %";
-                    ws.Cells[2, 7].Value = "DPS";
-                    ws.Cells[2, 8].Value = "Damage";
-                    int i = 2;
-                    foreach (var user in data.members.OrderByDescending(x => long.Parse(x.playerTotalDamage)))
+                    using (ExcelPackage package = new ExcelPackage(file))
                     {
-                        i++;
-                        ws.Cells[i, 1].Value = i - 2;
-                        AddImage(ws, i, 1, Invert(new Bitmap(SettingsHelper.Instance.GetImage((PlayerClass)Enum.Parse(typeof(PlayerClass), user.playerClass)))));
-                        ws.Cells[i, 2].Value = $"{user.playerServer}: {user.playerName}";
-                        ws.Cells[i, 2].Hyperlink = CreateUserSheet(package.Workbook, user, teraData);
-                        ws.Cells[i, 3].Value = long.Parse(user.playerDeaths);
-                        ws.Cells[i, 4].Value = long.Parse(user.playerDeathDuration);
-                        ws.Cells[i, 4].Style.Numberformat.Format = @"0\s";
-                        ws.Cells[i, 5].Value = double.Parse(user.playerTotalDamagePercentage) / 100;
-                        ws.Cells[i, 5].Style.Numberformat.Format = "0.0%";
-                        ws.Cells[i, 6].Value = double.Parse(user.playerAverageCritRate) / 100;
-                        ws.Cells[i, 6].Style.Numberformat.Format = "0.0%";
-                        ws.Cells[i, 7].Value = long.Parse(user.playerDps);
-                        ws.Cells[i, 7].Style.Numberformat.Format = @"#,#0,\k\/\s";
-                        ws.Cells[i, 8].Value = long.Parse(user.playerTotalDamage);
-                        ws.Cells[i, 8].Style.Numberformat.Format = @"#,#0,\k";
-                    }
-                    ws.Cells[1, 8].Formula = $"SUM(H3:H{i})";
-                    ws.Cells[1, 8].Style.Numberformat.Format = @"#,#0,\k";
-                    var border = ws.Cells[1, 1, i, 8].Style.Border;
-                    border.Bottom.Style = border.Top.Style = border.Left.Style = border.Right.Style = ExcelBorderStyle.Thick;
-                    ws.Cells[2, 1, i, 8].AutoFilter = true;
+                        ExcelWorksheet ws = package.Workbook.Worksheets.Add("Boss");
+                        var linkStyle = package.Workbook.Styles.CreateNamedStyle("HyperLink");
+                            //This one is language dependent
+                        linkStyle.Style.Font.UnderLine = true;
+                        linkStyle.Style.Font.Color.SetColor(Color.Blue);
+                        ws.DefaultRowHeight = 30;
+                        ws.Cells.Style.Font.Size = 14;
+                        ws.Cells.Style.Font.Name = "Arial";
+                        ws.Cells[1, 1].Value =
+                            $"{boss.Area}: {boss.Name} {TimeSpan.FromSeconds(double.Parse(data.fightDuration)).ToString(@"mm\:ss")}";
+                        ws.Cells[1, 1, 1, 6].Merge = true;
+                        ws.Cells[1, 1, 1, 8].Style.Font.Bold = true;
+                        ws.Cells[1, 7].Value = long.Parse(data.partyDps);
+                        ws.Cells[1, 7].Style.Numberformat.Format = @"#,#00,\k\/\s";
+                        ws.Cells[2, 1].Value = "Ic";
+                        ws.Cells[2, 1].Style.Font.Color.SetColor(Color.Transparent);
+                        ws.Cells[2, 2].Value = "Name";
+                        ws.Cells[2, 3].Value = "Deaths";
+                        ws.Cells[2, 4].Value = "Death time";
+                        ws.Cells[2, 5].Value = "Damage %";
+                        ws.Cells[2, 6].Value = "Crit %";
+                        ws.Cells[2, 7].Value = "DPS";
+                        ws.Cells[2, 8].Value = "Damage";
+                        int i = 2;
+                        foreach (var user in data.members.OrderByDescending(x => long.Parse(x.playerTotalDamage)))
+                        {
+                            i++;
+                            ws.Cells[i, 1].Value = i - 2;
+                            AddImage(ws, i, 1,
+                                Invert(
+                                    new Bitmap(
+                                        SettingsHelper.Instance.GetImage(
+                                            (PlayerClass) Enum.Parse(typeof (PlayerClass), user.playerClass)))));
+                            ws.Cells[i, 2].Value = $"{user.playerServer}: {user.playerName}";
+                            ws.Cells[i, 2].Hyperlink = CreateUserSheet(package.Workbook, user, teraData);
+                            ws.Cells[i, 3].Value = long.Parse(user.playerDeaths);
+                            ws.Cells[i, 4].Value = long.Parse(user.playerDeathDuration);
+                            ws.Cells[i, 4].Style.Numberformat.Format = @"0\s";
+                            ws.Cells[i, 5].Value = double.Parse(user.playerTotalDamagePercentage)/100;
+                            ws.Cells[i, 5].Style.Numberformat.Format = "0.0%";
+                            ws.Cells[i, 6].Value = double.Parse(user.playerAverageCritRate)/100;
+                            ws.Cells[i, 6].Style.Numberformat.Format = "0.0%";
+                            ws.Cells[i, 7].Value = long.Parse(user.playerDps);
+                            ws.Cells[i, 7].Style.Numberformat.Format = @"#,#0,\k\/\s";
+                            ws.Cells[i, 8].Value = long.Parse(user.playerTotalDamage);
+                            ws.Cells[i, 8].Style.Numberformat.Format = @"#,#0,\k";
+                        }
+                        ws.Cells[1, 8].Formula = $"SUM(H3:H{i})";
+                        ws.Cells[1, 8].Style.Numberformat.Format = @"#,#0,\k";
+                        var border = ws.Cells[1, 1, i, 8].Style.Border;
+                        border.Bottom.Style =
+                            border.Top.Style = border.Left.Style = border.Right.Style = ExcelBorderStyle.Thick;
+                        ws.Cells[2, 1, i, 8].AutoFilter = true;
 
-                    int j = i + 3;
-                    ws.Cells[j, 1].Value = "Ic";
-                    ws.Cells[j, 1].Style.Font.Color.SetColor(Color.Transparent);
-                    ws.Cells[j, 2].Value = "Debuff name";
-                    ws.Cells[j, 2, j, 7].Merge = true;
-                    ws.Cells[j, 8].Value = "%";
-                    ws.Cells[j, 2, j, 8].Style.Font.Bold = true;
-                    foreach (var buf in data.debuffUptime)
-                    {
-                        j++;
-                        var hotdot = teraData.HotDotDatabase.Get(int.Parse(buf.Key));
-                        ws.Cells[j, 1].Value = j - i - 3;
-                        AddImage(ws, j, 1, BTD.Icons.GetBitmap(hotdot.IconName));
-                        ws.Cells[j, 2].Value = hotdot.Name;
-                        if (!string.IsNullOrEmpty(hotdot.Tooltip)) ws.Cells[j, 2].AddComment("" + hotdot.Tooltip, "info");
+                        int j = i + 3;
+                        ws.Cells[j, 1].Value = "Ic";
+                        ws.Cells[j, 1].Style.Font.Color.SetColor(Color.Transparent);
+                        ws.Cells[j, 2].Value = "Debuff name";
                         ws.Cells[j, 2, j, 7].Merge = true;
-                        ws.Cells[j, 8].Value = double.Parse(buf.Value) / 100;
-                        ws.Cells[j, 8].Style.Numberformat.Format = "0%";
-                    }
-                    border = ws.Cells[i + 3, 1, j, 8].Style.Border;
-                    border.Bottom.Style = border.Top.Style = border.Left.Style = border.Right.Style = ExcelBorderStyle.Thick;
+                        ws.Cells[j, 8].Value = "%";
+                        ws.Cells[j, 2, j, 8].Style.Font.Bold = true;
+                        foreach (var buf in data.debuffUptime)
+                        {
+                            j++;
+                            var hotdot = teraData.HotDotDatabase.Get(int.Parse(buf.Key));
+                            ws.Cells[j, 1].Value = j - i - 3;
+                            AddImage(ws, j, 1, BTD.Icons.GetBitmap(hotdot.IconName));
+                            ws.Cells[j, 2].Value = hotdot.Name;
+                            if (!string.IsNullOrEmpty(hotdot.Tooltip))
+                                ws.Cells[j, 2].AddComment("" + hotdot.Tooltip, "info");
+                            ws.Cells[j, 2, j, 7].Merge = true;
+                            ws.Cells[j, 8].Value = double.Parse(buf.Value)/100;
+                            ws.Cells[j, 8].Style.Numberformat.Format = "0%";
+                        }
+                        border = ws.Cells[i + 3, 1, j, 8].Style.Border;
+                        border.Bottom.Style =
+                            border.Top.Style = border.Left.Style = border.Right.Style = ExcelBorderStyle.Thick;
 
-                    ws.Column(1).Width = 5.6;
-                    ws.Column(2).AutoFit();
-                    ws.Column(3).AutoFit();
-                    ws.Column(4).AutoFit();
-                    ws.Column(5).AutoFit();
-                    ws.Column(6).AutoFit();
-                    ws.Column(7).AutoFit();
-                    ws.Column(8).Width = 17;
-                    ws.Column(2).Width = GetTrueColumnWidth(ws.Column(2).Width);
-                    ws.Column(3).Width = GetTrueColumnWidth(ws.Column(3).Width);
-                    ws.Column(4).Width = GetTrueColumnWidth(ws.Column(4).Width);
-                    ws.Column(5).Width = GetTrueColumnWidth(ws.Column(5).Width);
-                    ws.Column(6).Width = GetTrueColumnWidth(ws.Column(6).Width);
-                    ws.Column(7).Width = GetTrueColumnWidth(ws.Column(7).Width);
-                    ws.Cells[1, 1, j, 8].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-                    ws.Cells[1, 1, j, 8].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                    ws.PrinterSettings.FitToPage = true;
-                    package.Workbook.Properties.Title = Boss.Name;
-                    package.Workbook.Properties.Author = "CasualMeter";
-                    package.Workbook.Properties.Company = "github.com/lunyx github.com/Gl0 github.com/neowutran";
-                    package.Save();
+                        ws.Column(1).Width = 5.6;
+                        ws.Column(2).AutoFit();
+                        ws.Column(3).AutoFit();
+                        ws.Column(4).AutoFit();
+                        ws.Column(5).AutoFit();
+                        ws.Column(6).AutoFit();
+                        ws.Column(7).AutoFit();
+                        ws.Column(8).Width = 17;
+                        ws.Column(2).Width = GetTrueColumnWidth(ws.Column(2).Width);
+                        ws.Column(3).Width = GetTrueColumnWidth(ws.Column(3).Width);
+                        ws.Column(4).Width = GetTrueColumnWidth(ws.Column(4).Width);
+                        ws.Column(5).Width = GetTrueColumnWidth(ws.Column(5).Width);
+                        ws.Column(6).Width = GetTrueColumnWidth(ws.Column(6).Width);
+                        ws.Column(7).Width = GetTrueColumnWidth(ws.Column(7).Width);
+                        ws.Cells[1, 1, j, 8].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                        ws.Cells[1, 1, j, 8].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                        ws.PrinterSettings.FitToPage = true;
+                        package.Workbook.Properties.Title = boss.Name;
+                        package.Workbook.Properties.Author = "CasualMeter";
+                        package.Workbook.Properties.Company = "github.com/lunyx github.com/Gl0 github.com/neowutran";
+                        package.Save();
+                    }
                 }
+                if (exportType == ExportType.ExcelTemp && File.Exists(fname))
+                    Process.Start(fname);
             }
         }
         private static void AddImage(ExcelWorksheet ws, int rowIndex, int columnIndex, Bitmap image)
         {
-            ExcelPicture picture = null;
             if (image != null)
             {
-                picture = ws.Drawings.AddPicture("pic" + rowIndex + columnIndex, image);
+                var picture = ws.Drawings.AddPicture("pic" + rowIndex + columnIndex, image);
                 picture.From.Column = columnIndex-1;
                 picture.From.Row = rowIndex-1;
                 picture.From.ColumnOff = 12000;
