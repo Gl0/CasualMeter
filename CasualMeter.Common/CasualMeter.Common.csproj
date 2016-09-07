@@ -129,6 +129,7 @@
     <Compile Include="TeraDpsApi\ExcelExport.cs" />
     <Compile Include="TeraDpsApi\Members.cs" />
     <Compile Include="TeraDpsApi\SkillLog.cs" />
+    <Compile Include="Tools\DateTimeTools.cs" />
     <Compile Include="UI\Controls\CompactPlayerInfoControl.xaml.cs">
       <DependentUpon>CompactPlayerInfoControl.xaml</DependentUpon>
     </Compile>

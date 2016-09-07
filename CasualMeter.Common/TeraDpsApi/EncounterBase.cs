@@ -6,7 +6,7 @@ namespace CasualMeter.Common.TeraDpsApi
 {
     public class EncounterBase
     {
-        public DateTime encounterDateTime;
+        public double encounterUnixEpoch;
         public string areaId;
         public string bossId;
         public string fightDuration;

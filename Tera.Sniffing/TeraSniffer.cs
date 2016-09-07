@@ -35,7 +35,14 @@ namespace Tera.Sniffing
                 string filter = string.Join(" or ", netmasks.Select(x => $"(net {x})"));
                 filter = "tcp and (" + filter + ")";
 
-                ipSniffer = new IpSnifferWinPcap(filter);
+                try
+                {
+                    ipSniffer = new IpSnifferWinPcap(filter);
+                }
+                catch 
+                {
+                    ipSniffer = new IpSnifferRawSocketMultipleInterfaces();
+                }
             }
 
             _ipSniffer = ipSniffer;

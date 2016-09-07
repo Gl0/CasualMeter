@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using CasualMeter.Common.Conductors.Messages;
 using CasualMeter.Common.Helpers;
+using CasualMeter.Common.Tools;
 using Tera.Data;
 using Tera.Game;
 using OfficeOpenXml;
@@ -29,7 +30,7 @@ namespace CasualMeter.Common.TeraDpsApi
                             ? SettingsHelper.Instance.GetDocumentsPath()
                             : SettingsHelper.Instance.GetTempFolderPath(), $"exports/{boss.Area.Replace(":", "-")}");
                 Directory.CreateDirectory(dir);
-                var fname = Path.Combine(dir, $"{boss.Name.Replace(":", "-")} {data.encounterDateTime.ToLocalTime().ToString("yyyy-MM-dd HH-mm-ss", CultureInfo.InvariantCulture)}.xlsx");
+                var fname = Path.Combine(dir, $"{boss.Name.Replace(":", "-")} {DateTimeTools.UnixTimeStampToDateTime(data.encounterUnixEpoch).ToString("yyyy-MM-dd HH-mm-ss", CultureInfo.InvariantCulture)}.xlsx");
                 FileInfo file = new FileInfo(fname);
                 if (!file.Exists)
                 {

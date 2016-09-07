@@ -548,6 +548,7 @@ namespace CasualMeter
                 if (_needInit)
                 {
                     Server = BasicTeraData.Servers.GetServer(sLogin.ServerId, Server);
+                    _messageFactory.Version = Server.Region;
                     Logger.Info($"Logged in to server {Server.Name}.");
                     _teraData = BasicTeraData.DataForRegion(Server.Region);
                     _entityTracker = new EntityTracker(_teraData.NpcDatabase);
@@ -569,7 +570,7 @@ namespace CasualMeter
                 var opCodeNamer =
                     new OpCodeNamer(Path.Combine(BasicTeraData.ResourceDirectory,
                         $"opcodes/{cVersion.Versions[0]}.txt"));
-                _messageFactory = new MessageFactory(opCodeNamer, cVersion.Versions[0]);
+                _messageFactory = new MessageFactory(opCodeNamer, Server.Region);
                 return;
             }
         }

@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using CasualMeter.Common.Conductors.Messages;
 using CasualMeter.Common.Entities;
 using CasualMeter.Common.Helpers;
+using CasualMeter.Common.Tools;
 using Lunyx.Common.UI.Wpf;
 using Tera.Data;
 
@@ -70,7 +71,7 @@ namespace CasualMeter.Common.TeraDpsApi
             var partyDps = TimeSpan.TicksPerSecond * totaldamage / interval;
             var teradpsData = new EncounterBase
             {
-                encounterDateTime = damageTracker.FirstAttack?.ToUniversalTime() ?? DateTime.UtcNow,
+                encounterUnixEpoch = DateTimeTools.DateTimeToUnixTimestamp(damageTracker.FirstAttack?.ToUniversalTime() ?? DateTime.UtcNow),
                 areaId = entity.Info.HuntingZoneId + "",
                 bossId = entity.Info.TemplateId + "",
                 fightDuration = seconds + "",
@@ -105,8 +106,8 @@ namespace CasualMeter.Common.TeraDpsApi
                 teradpsUser.playerClass = user.Class.ToString();
                 teradpsUser.playerName = user.Name;
                 teradpsUser.playerServer = SettingsHelper.Instance.BasicTeraData.Servers.GetServerName(user.Player.ServerId);
-                teradpsUser.playerAverageCritRate = Math.Round(100 * (double)filteredSkillog.Count(x => x.IsCritical && x.Damage > 0) / filteredSkillog.Count(x => x.Damage > 0), 1) + "";
-                teradpsUser.healCrit = user.Player.IsHealer ? Math.Round(100 * (double)filteredSkillog.Count(x => x.IsCritical && x.Heal > 0) / filteredSkillog.Count(x => x.Heal > 0), 1) + "" : null;
+                teradpsUser.playerAverageCritRate = Math.Round(100 * (double)filteredSkillog.Count(x => x.IsCritical && x.Damage > 0) / filteredSkillog.Count(x => x.Damage > 0)) + "";
+                teradpsUser.healCrit = user.Player.IsHealer ? Math.Round(100 * (double)filteredSkillog.Count(x => x.IsCritical && x.Heal > 0) / filteredSkillog.Count(x => x.Heal > 0)) + "" : null;
                 teradpsUser.playerDps = TimeSpan.TicksPerSecond * damage / interval + "";
                 teradpsUser.playerTotalDamagePercentage = damage * 100 / totaldamage + "";
 
@@ -145,8 +146,8 @@ namespace CasualMeter.Common.TeraDpsApi
 
                     skillLog.skillAverageCrit = skill.AverageCrit + "";
                     skillLog.skillAverageWhite = skill.AverageWhite + "";
-                    skillLog.skillCritRate = Math.Round(skill.CritRate * 100, 1) + "";
-                    skillLog.skillDamagePercent = Math.Round(skill.DamagePercent * 100, 1) + "";
+                    skillLog.skillCritRate = Math.Round(skill.CritRate * 100) + "";
+                    skillLog.skillDamagePercent = Math.Round(skill.DamagePercent * 100) + "";
                     skillLog.skillHighestCrit = skill.HighestCrit + "";
                     skillLog.skillHits = skill.Hits + "";
                     skillLog.skillId = teraData.SkillDatabase.GetSkillByPetName(skill.NpcInfo?.Name,user.Player.RaceGenderClass)?.Id.ToString() ?? skill.SkillId.ToString();
@@ -170,25 +171,26 @@ namespace CasualMeter.Common.TeraDpsApi
             var areaId = int.Parse(teradpsData.areaId);
             if (
                 areaId != 886 &&
-                areaId != 467 &&
-                areaId != 767 &&
-                areaId != 768 &&
-                areaId != 470 &&
-                areaId != 468 &&
-                areaId != 770 &&
-                areaId != 769 &&
-                areaId != 916 &&
-                areaId != 969 &&
-                areaId != 970
+                //areaId != 467 &&
+                //areaId != 767 &&
+                //areaId != 768 &&
+                //areaId != 470 &&
+                areaId != 468
+                //areaId != 770 &&
+                //areaId != 769 &&
+                //areaId != 916 &&
+                //areaId != 969 &&
+                //areaId != 970 &&
+                //areaId != 950
                 )
             {
                 return;
             }
 
-            if (int.Parse(teradpsData.partyDps) < 2000000 && areaId != 468)
-            {
-                return;
-            }
+            //if (int.Parse(teradpsData.partyDps) < 2000000 && areaId != 468)
+            //{
+            //    return;
+            //}
             var json = JsonConvert.SerializeObject(teradpsData, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             Task.Run(() => Send(entity, json, 3));
         }
@@ -203,10 +205,10 @@ namespace CasualMeter.Common.TeraDpsApi
                     using (var client = new HttpClient())
                     {
                         client.Timeout = TimeSpan.FromSeconds(30);
-                        client.DefaultRequestHeaders.Add("X-Auth-Token", SettingsHelper.Instance.Settings.TeraDpsToken);
-                        client.DefaultRequestHeaders.Add("X-User-Id", SettingsHelper.Instance.Settings.TeraDpsUser);
+                        //client.DefaultRequestHeaders.Add("X-Auth-Token", SettingsHelper.Instance.Settings.TeraDpsToken);
+                        //client.DefaultRequestHeaders.Add("X-User-Id", SettingsHelper.Instance.Settings.TeraDpsUser);
 
-                        var response = client.PostAsync("http://teradps.io/api/que", new StringContent(
+                        var response = client.PostAsync("http://moongourd.net/dpsmeter_data.php", new StringContent(
                         json,
                         Encoding.UTF8,
                         "application/json")
