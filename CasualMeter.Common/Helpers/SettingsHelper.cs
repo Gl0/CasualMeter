@@ -25,7 +25,7 @@ namespace CasualMeter.Common.Helpers
         private readonly JsonSerializerSettings _jsonSerializerSettings ;
 
         public Settings Settings { get; set; }
-        public string Version { get; set; } = "v1.2.1.9B";
+        public string Version { get; set; } = "v1.2.1.10B";
 
         private SettingsHelper()
         {
