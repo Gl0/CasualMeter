@@ -223,7 +223,7 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0">Autoexport to teradps.io</TextBlock>
+                        <TextBlock Grid.Column="0">Autoexport to moongourd.com</TextBlock>
                         <CheckBox Grid.Column="1" x:Name="SiteCheckBox"
                                   IsChecked="{Binding SiteExport}"
                                   HorizontalAlignment="Right"

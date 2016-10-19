@@ -78,7 +78,7 @@ namespace CasualMeter.Common.TeraDpsApi
                 partyDps = partyDps + ""
             };
 
-            foreach (var debuff in abnormals.Get(entity))
+            foreach (var debuff in abnormals.Get(entity).OrderByDescending(x=>x.Value.Duration(firstTick, lastTick)))
             {
                 long percentage = debuff.Value.Duration(firstTick, lastTick) * 100 / interval;
                 if(percentage == 0)
@@ -90,7 +90,7 @@ namespace CasualMeter.Common.TeraDpsApi
                     ));
             }
 
-            foreach (var user in damageTracker.StatsByUser)
+            foreach (var user in damageTracker.StatsByUser.OrderByDescending(x=>x.Dealt.Damage))
             {
                 var filteredSkillog = timedEncounter
                     ? user.SkillLog.Where(x => x.Time >= firstHit && x.Time <= lastHit).ToList()
@@ -118,7 +118,7 @@ namespace CasualMeter.Common.TeraDpsApi
                 var aggro = buffs.Aggro(entity);
                 teradpsUser.aggro = 100 * aggro.Duration(firstTick, lastTick) / interval + "";
 
-                foreach (var buff in buffs.Times)
+                foreach (var buff in buffs.Times.OrderByDescending(x => x.Value.Duration(firstTick, lastTick)))
                 {
                     long percentage = (buff.Value.Duration(firstTick, lastTick) * 100 / interval);
                     if (percentage == 0)
@@ -138,7 +138,7 @@ namespace CasualMeter.Common.TeraDpsApi
                     if (aggregated.All(asr => !skill.IsSameSkillAs(asr)))
                         aggregated.Add(new AggregatedSkillResult(skill.SkillShortName,skill.IsHeal,AggregationType.Name, collection));
                 }
-                foreach (var skill in aggregated)
+                foreach (var skill in aggregated.OrderByDescending(x=>x.Damage))
                 {
                     var skillLog = new SkillLog();
                     var skilldamage = skill.Damage;
@@ -171,10 +171,10 @@ namespace CasualMeter.Common.TeraDpsApi
             var areaId = int.Parse(teradpsData.areaId);
             if (
                 areaId != 886 &&
-                //areaId != 467 &&
-                //areaId != 767 &&
-                //areaId != 768 &&
-                //areaId != 470 &&
+                areaId != 467 &&
+                areaId != 767 &&
+                areaId != 768 &&
+                areaId != 470 &&
                 areaId != 468
                 //areaId != 770 &&
                 //areaId != 769 &&
@@ -208,7 +208,7 @@ namespace CasualMeter.Common.TeraDpsApi
                         //client.DefaultRequestHeaders.Add("X-Auth-Token", SettingsHelper.Instance.Settings.TeraDpsToken);
                         //client.DefaultRequestHeaders.Add("X-User-Id", SettingsHelper.Instance.Settings.TeraDpsUser);
 
-                        var response = client.PostAsync("http://moongourd.net/dpsmeter_data.php", new StringContent(
+                        var response = client.PostAsync("http://moongourd.com/dpsmeter_data.php", new StringContent(
                         json,
                         Encoding.UTF8,
                         "application/json")

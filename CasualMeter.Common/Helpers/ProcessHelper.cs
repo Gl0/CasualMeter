@@ -63,7 +63,19 @@ namespace CasualMeter.Common.Helpers
             return false;
         }
 
-        public bool? IsTeraActive => ProcessInfo.GetActiveProcessName()?.Equals("Tera", StringComparison.OrdinalIgnoreCase);
+        public bool? IsTeraActive
+        {
+            get
+            {
+                try
+                {
+                    return ProcessInfo.GetActiveProcessName()?.Equals("Tera", StringComparison.OrdinalIgnoreCase);
+                } catch (InvalidOperationException)
+                {
+                    return false;
+                }
+            }
+        }
 
         public IntPtr TeraWindow => ProcessInfo.FindWindow("LaunchUnrealUWindowsClient", "TERA");
     }
