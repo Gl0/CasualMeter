@@ -70,8 +70,8 @@ namespace CasualMeter.Common.Helpers
                 try
                 {
                     return ProcessInfo.GetActiveProcessName()?.Equals("Tera", StringComparison.OrdinalIgnoreCase);
-                } catch (InvalidOperationException)
-                {
+                } catch (Exception)
+                {	//seems like there are multiple exceptions that can be thrown here, so just catch all of them.
                     return false;
                 }
             }

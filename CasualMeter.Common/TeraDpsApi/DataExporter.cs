@@ -190,6 +190,21 @@ namespace CasualMeter.Common.TeraDpsApi
             //{
             //    return;
             //}
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromSeconds(40);
+                    var response = client.GetAsync("http://moongourd.com/shared/servertime");
+                    var timediff = (response.Result.Headers.Date.Value.UtcDateTime.Ticks - DateTime.UtcNow.Ticks) / TimeSpan.TicksPerSecond;
+                    teradpsData.encounterUnixEpoch += timediff;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Get server time error");
+                return;
+            }
             var json = JsonConvert.SerializeObject(teradpsData, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             Task.Run(() => Send(entity, json, 3));
         }
