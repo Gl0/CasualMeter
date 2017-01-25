@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CasualMeter.Common.Helpers;
-using Tera.DamageMeter;
+using CasualMeter.Core.Helpers;
+using CasualMeter.Tracker;
 using Tera.Data;
 using Tera.Game.Abnormality;
 

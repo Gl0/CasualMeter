@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using Lunyx.Common.UI.Wpf;
+using Lunyx.Common.UI.Wpf.Collections;
+using Lunyx.Common.UI.Wpf.Interfaces;
 using Nicenis.ComponentModel;
 using Tera.Game;
 
@@ -45,7 +46,7 @@ namespace CasualMeter.Common.Entities
 
     public class AggregatedSkillResult : PropertyObservable
     {
-        public AggregatedSkillResult(string displayName, bool isHeal, AggregationType type, ThreadSafeObservableCollection<SkillResult> skillLog)
+        public AggregatedSkillResult(string displayName, bool isHeal, AggregationType type, ISyncedCollection<SkillResult> skillLog)
         {
             DisplayName = displayName;
             IsHeal = isHeal;
@@ -69,9 +70,9 @@ namespace CasualMeter.Common.Entities
             }
         }
 
-        private ThreadSafeObservableCollection<SkillResult> SkillLog
+        private ISyncedCollection<SkillResult> SkillLog
         {
-            get { return GetProperty<ThreadSafeObservableCollection<SkillResult>>(); }
+            get { return GetProperty<ISyncedCollection<SkillResult>>(); }
             set { SetProperty(value); }
         }
 

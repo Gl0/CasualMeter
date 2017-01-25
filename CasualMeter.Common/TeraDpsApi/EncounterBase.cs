@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using CasualMeter.Common.Helpers;
+using CasualMeter.Core.Helpers;
 
 namespace CasualMeter.Common.TeraDpsApi
 {

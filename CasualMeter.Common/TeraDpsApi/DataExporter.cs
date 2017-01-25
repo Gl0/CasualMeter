@@ -3,41 +3,40 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using Tera.DamageMeter;
-using Tera.Game.Messages;
 using Newtonsoft.Json;
 using Tera.Game;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using CasualMeter.Common.Conductors.Messages;
 using CasualMeter.Common.Entities;
-using CasualMeter.Common.Helpers;
 using CasualMeter.Common.Tools;
-using Lunyx.Common.UI.Wpf;
+using CasualMeter.Core.Conductors.Messages;
+using CasualMeter.Core.Helpers;
+using CasualMeter.Tracker;
+using Lunyx.Common.UI.Wpf.Collections;
 using Tera.Data;
 
 namespace CasualMeter.Common.TeraDpsApi
 {
     public static class DataExporter
     {
-        public static void ToTeraDpsApi(ExportType exportType, DamageTracker damageTracker, TeraData teraData)
+        public static void ToTeraDpsApi(ExportType exportType, DamageTracker damageTracker, TeraData teraData, NpcEntity forcedBoss=null)
         {
             if (exportType == ExportType.None) return;
 
-            //if we want to upload, primary target must be dead
-            if (exportType.HasFlag(ExportType.Upload) && !damageTracker.IsPrimaryTargetDead)
+            //if we want to upload, primary target must be dead or it's Vergos p2/p3
+            if (exportType.HasFlag(ExportType.Upload) && !(forcedBoss!=null || damageTracker.IsPrimaryTargetDead))
                 return;
 
             var exportToExcel = (exportType & (ExportType.Excel | ExportType.ExcelTemp)) != 0;
             //if we're not exporting to excel and credentials aren't fully entered, return
-            if (!exportToExcel
-                && (string.IsNullOrEmpty(SettingsHelper.Instance.Settings.TeraDpsToken)
-                    || string.IsNullOrEmpty(SettingsHelper.Instance.Settings.TeraDpsUser)))
-                return;
+            //if (!exportToExcel
+            //    && (string.IsNullOrEmpty(SettingsHelper.Instance.Settings.TeraDpsToken)
+            //        || string.IsNullOrEmpty(SettingsHelper.Instance.Settings.TeraDpsUser)))
+            //    return;
 
             //ignore if not a boss
-            var entity = damageTracker.PrimaryTarget;
+            var entity = forcedBoss ?? damageTracker.PrimaryTarget;
             if (!(entity?.Info.Boss ?? false)) return;
 
             var abnormals = damageTracker.Abnormals;
@@ -61,12 +60,12 @@ namespace CasualMeter.Common.TeraDpsApi
                 totaldamage =
                     damageTracker.StatsByUser.SelectMany(x => x.SkillLog)
                         .Where(x => x.Time >= firstHit && x.Time <= lastHit)
-                        .Sum(x => x.Damage);
+                        .Sum(x => (long)x.Damage);
             else
                 totaldamage =
                     damageTracker.StatsByUser.SelectMany(x => x.SkillLog)
                         .Where(x => x.Target == entity)
-                        .Sum(x => x.Damage);
+                        .Sum(x => (long)x.Damage);
 
             var partyDps = TimeSpan.TicksPerSecond * totaldamage / interval;
             var teradpsData = new EncounterBase
@@ -131,12 +130,13 @@ namespace CasualMeter.Common.TeraDpsApi
                 }
 
                 var aggregated = new List<AggregatedSkillResult>();
-                var collection = new ThreadSafeObservableCollection<SkillResult>();
+                var collection = new SynchronizedObservableCollection<SkillResult>();
                 foreach (var skill in filteredSkillog)
                 {
                     collection.Add(skill);
                     if (aggregated.All(asr => !skill.IsSameSkillAs(asr)))
-                        aggregated.Add(new AggregatedSkillResult(skill.SkillShortName,skill.IsHeal,AggregationType.Name, collection));
+                        aggregated.Add(new AggregatedSkillResult(skill.SkillShortName, skill.IsHeal,
+                            AggregationType.Name, collection));
                 }
                 foreach (var skill in aggregated.OrderByDescending(x=>x.Damage))
                 {
@@ -180,16 +180,13 @@ namespace CasualMeter.Common.TeraDpsApi
                 areaId != 916 &&
                 areaId != 969 &&
                 areaId != 970 &&
-                areaId != 950
+                areaId != 710 &&
+                !(areaId == 950 && int.Parse(teradpsData.bossId) / 100 != 11)
                 )
             {
                 return;
             }
 
-            //if (int.Parse(teradpsData.partyDps) < 2000000 && areaId != 468)
-            //{
-            //    return;
-            //}
             try
             {
                 using (var client = new HttpClient())
@@ -200,7 +197,7 @@ namespace CasualMeter.Common.TeraDpsApi
                     teradpsData.encounterUnixEpoch += timediff;
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Debug.WriteLine("Get server time error");
                 return;

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using log4net;
 using PacketDotNet;
+using PacketDotNet.Utils;
 using SharpPcap;
 using SharpPcap.WinPcap;
 
@@ -96,9 +97,16 @@ namespace NetworkSniffer
 
         void device_OnPacketArrival(object sender, CaptureEventArgs e)
         {
-            var linkPacket = Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
-
-            var ipPacket = linkPacket.PayloadPacket as IpPacket;
+            IPv4Packet ipPacket;
+            if (e.Packet.LinkLayerType != LinkLayers.Null)
+            {
+                var linkPacket = Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
+                ipPacket = linkPacket.PayloadPacket as IPv4Packet;
+            }
+            else
+            {
+                ipPacket = new IPv4Packet(new ByteArraySegment(e.Packet.Data, 4, e.Packet.Data.Length - 4));
+            }
             if (ipPacket == null)
                 return;
 

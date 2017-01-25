@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CasualMeter.Common.Helpers;
-using Tera.DamageMeter;
+using CasualMeter.Tracker;
 
 namespace CasualMeter.Common.Formatters
 {

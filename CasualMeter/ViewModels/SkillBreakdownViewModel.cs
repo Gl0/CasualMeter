@@ -1,30 +1,23 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Data;
-using CasualMeter.Common;
-using CasualMeter.Common.Conductors;
-using CasualMeter.Common.Conductors.Messages;
 using CasualMeter.Common.Entities;
-using CasualMeter.Common.UI;
-using CasualMeter.Common.UI.ViewModels;
-using Lunyx.Common.UI.Wpf;
+using CasualMeter.Core.Conductors;
+using CasualMeter.Core.Conductors.Messages;
+using CasualMeter.Core.Helpers;
+using CasualMeter.Tracker;
+using CasualMeter.ViewModels.Base;
+using Lunyx.Common.UI.Wpf.Collections;
 using Nicenis.ComponentModel;
-using Tera.DamageMeter;
 using Tera.Game;
 
 namespace CasualMeter.ViewModels
 {
     public class SkillBreakdownViewModel : CasualViewModelBase
     {
-        public ThreadSafeObservableCollection<ComboBoxEntity> ComboBoxEntities
+        public SynchronizedObservableCollection<ComboBoxEntity> ComboBoxEntities
         {
-            get { return GetProperty<ThreadSafeObservableCollection<ComboBoxEntity>>(); }
+            get { return GetProperty<SynchronizedObservableCollection<ComboBoxEntity>>(); }
             set { SetProperty(value); }
         }
 
@@ -62,27 +55,27 @@ namespace CasualMeter.ViewModels
             set { SetProperty(value); }
         }
 
-        public ThreadSafeObservableCollection<SkillResult> SkillLog
+        public SynchronizedObservableCollection<SkillResult> SkillLog
         {
-            get { return GetProperty<ThreadSafeObservableCollection<SkillResult>>(); }
+            get { return GetProperty<SynchronizedObservableCollection<SkillResult>>(); }
             set { SetProperty(value); }
         }
 
-        public ThreadSafeObservableCollection<AggregatedSkillResult> AggregatedSkillLogById
+        public SynchronizedObservableCollection<AggregatedSkillResult> AggregatedSkillLogById
         {
-            get { return GetProperty(getDefault: () => new ThreadSafeObservableCollection<AggregatedSkillResult>()); }
+            get { return GetProperty(getDefault: () => new SynchronizedObservableCollection<AggregatedSkillResult>()); }
             set { SetProperty(value); }
         }
 
-        public ThreadSafeObservableCollection<AggregatedSkillResult> AggregatedSkillLogByName
+        public SynchronizedObservableCollection<AggregatedSkillResult> AggregatedSkillLogByName
         {
-            get { return GetProperty(getDefault: () => new ThreadSafeObservableCollection<AggregatedSkillResult>()); }
+            get { return GetProperty(getDefault: () => new SynchronizedObservableCollection<AggregatedSkillResult>()); }
             set { SetProperty(value); }
         }
         
         public SkillBreakdownViewModel(PlayerInfo playerInfo)
         {
-            ComboBoxEntities = new ThreadSafeObservableCollection<ComboBoxEntity>
+            ComboBoxEntities = new SynchronizedObservableCollection<ComboBoxEntity>
             {
                 new ComboBoxEntity(SkillViewType.FlatView, "Flat View"),
                 new ComboBoxEntity(SkillViewType.AggregatedSkillIdView, "Aggregate by Id"),

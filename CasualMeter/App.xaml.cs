@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
-using CasualMeter.Common.Helpers;
+using CasualMeter.Core.Helpers;
 using log4net;
 using Lunyx.Common.UI.Wpf;
 
@@ -29,7 +29,8 @@ namespace CasualMeter
             if (SingleInstance<App>.InitializeAsFirstInstance(Unique))
             {
                 Logger.Info("Starting up.");
-                // Initialize process helper
+
+                // Initialize helpers
                 ProcessHelper.Instance.Initialize();
 
                 var application = new App();

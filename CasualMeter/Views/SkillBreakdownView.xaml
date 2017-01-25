@@ -1,13 +1,14 @@
-﻿<controls:CasualMeterWindow x:Class="CasualMeter.Views.SkillBreakdownView"
+﻿<controls1:CasualMeterWindow x:Class="CasualMeter.Views.SkillBreakdownView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:controls="clr-namespace:CasualMeter.Common.UI.Controls;assembly=CasualMeter.Common"
+        xmlns:controls="clr-namespace:CasualMeter.UI.Controls"
         xmlns:casualMeter="clr-namespace:CasualMeter"
         xmlns:sys="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         xmlns:lc="clr-namespace:Lunyx.Common.UI.Wpf.Controls;assembly=Lunyx.Common.UI.Wpf"
         xmlns:viewModels="clr-namespace:CasualMeter.ViewModels"
+        xmlns:controls1="clr-namespace:CasualMeter.UI.Controls"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance d:Type=viewModels:SkillBreakdownViewModel}"
         Title="{Binding PlayerInfo.Name, StringFormat=Skill Breakdown - {0}}"
@@ -96,8 +97,8 @@
                                      ClipboardCopyMode="IncludeHeader"
                                      IsSynchronizedWithCurrentItem="False"
                                      SelectionChanged="SkillResultsGrid_OnSelectionChanged"
-                                     SortDescriptionSource="{Binding SkillBreakdownViewModel.SortDescriptionSource, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:CasualMeterWindow}}"/>
+                                     SortDescriptionSource="{Binding SkillBreakdownViewModel.SortDescriptionSource, RelativeSource={RelativeSource FindAncestor, AncestorType=controls1:CasualMeterWindow}}"/>
             </Grid>
         </StackPanel>
     </Grid>
-</controls:CasualMeterWindow>
+</controls1:CasualMeterWindow>

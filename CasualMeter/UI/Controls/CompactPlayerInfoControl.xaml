@@ -1,0 +1,73 @@
+﻿<controls1:PlayerInfoControl x:Class="CasualMeter.UI.Controls.CompactPlayerInfoControl"
+                            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                             xmlns:damageMeter="clr-namespace:CasualMeter.Tracker;assembly=CasualMeter.Tracker"
+                            xmlns:controls="clr-namespace:CasualMeter.UI.Controls"
+                            xmlns:converters1="clr-namespace:Lunyx.Common.UI.Wpf.Converters;assembly=Lunyx.Common.UI.Wpf"
+                            xmlns:controls1="clr-namespace:CasualMeter.UI.Controls"
+                            xmlns:converters="clr-namespace:CasualMeter.Converters"
+                            mc:Ignorable="d"
+                            d:DataContext="{d:DesignInstance d:Type=damageMeter:PlayerInfo}"
+                            Width="{StaticResource Width}" Height="25">
+    <controls1:PlayerInfoControl.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource BrushWhite}"/>
+            <Setter Property="Padding" Value="5,4,5,0"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <converters1:BooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" True="Collapsed" False="Visible"/>
+        <converters:PlayerClassToImageConverter x:Key="PlayerClassToImageConverter"/>
+        <converters:DoubleToPercentStringConverter x:Key="DoubleToPercentStringConverter"/>
+        <converters:LongToStringConverter x:Key="LongToStringConverter"/>
+        <converters:DpsToStringConverter x:Key="DpsToStringConverter"/>
+        <converters:ContributionToWidthConverter x:Key="ContributionToWidthConverter"/>
+        <converters:BooleanToContributionBrushConverter x:Key="BooleanToContributionBrushConverter"/>
+        <converters:OpacityValueConverter x:Key="OpacityValueConverter"></converters:OpacityValueConverter>
+    </controls1:PlayerInfoControl.Resources>
+    <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto"/>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="Auto"/>
+    </Grid.ColumnDefinitions>
+    <Rectangle Fill="{Binding Tracker.IsArchived, Converter={StaticResource BooleanToContributionBrushConverter}}"
+               Opacity="{Binding ElementName=OpacityScaleSlider, Path=Value, Converter={StaticResource OpacityValueConverter}}"
+               Grid.Column="0" Grid.ColumnSpan="3"
+               Grid.ZIndex="-99999"
+               HorizontalAlignment="Left"
+               Width="{Binding Dealt.DamageFraction, Converter={StaticResource ContributionToWidthConverter}, ConverterParameter={StaticResource Width}}"/>
+    <Image Source="{Binding Class, Converter={StaticResource PlayerClassToImageConverter}}"
+           Grid.Column="0"
+           Margin="2,0,0,0"
+           Height="20" Width="20"/>
+    <StackPanel Grid.Column="1">
+        <TextBlock Text="{Binding Name}" ToolTip="{Binding FullName}"/>
+    </StackPanel>
+    <StackPanel Grid.Column="2">
+        <Grid HorizontalAlignment="Right">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0"
+                       Text="{Binding Dealt.Heal, Converter={StaticResource LongToStringConverter}}"
+                       TextAlignment="Right"
+                       Foreground="{StaticResource BrushHeal}"/>
+            <TextBlock Grid.Column="1" 
+                       Text="{Binding Dealt.Damage, Converter={StaticResource LongToStringConverter}}"
+                       TextAlignment="Right"
+                       Foreground="{StaticResource BrushDamage}"/>
+            <TextBlock Grid.Column="2" 
+                       Text="{Binding Dealt.Dps, Converter={StaticResource DpsToStringConverter}}"
+                       TextAlignment="Right"
+                       Visibility="{Binding ElementName=ShowPersonalDpsCheckBox, Path=IsChecked, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
+            <TextBlock Grid.Column="2" 
+                       Text="{Binding Dealt.PersonalDps, Converter={StaticResource DpsToStringConverter}}"
+                       TextAlignment="Right"
+                       Visibility="{Binding ElementName=ShowPersonalDpsCheckBox, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        </Grid>
+    </StackPanel>
+</controls1:PlayerInfoControl>
