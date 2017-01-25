@@ -55,7 +55,12 @@
             <TextBlock Grid.Column="0"
                        Text="{Binding Dealt.Heal, Converter={StaticResource LongToStringConverter}}"
                        TextAlignment="Right"
-                       Foreground="{StaticResource BrushHeal}"/>
+                       Foreground="{StaticResource BrushHeal}"
+                       Visibility="{Binding Healer, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            <TextBlock Grid.Column="0"
+                       Text="{Binding Dealt.CritFraction, Converter={StaticResource DoubleToPercentStringConverter}}"
+                       TextAlignment="Right"
+                       Visibility="{Binding Healer, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
             <TextBlock Grid.Column="1" 
                        Text="{Binding Dealt.Damage, Converter={StaticResource LongToStringConverter}}"
                        TextAlignment="Right"

@@ -18,7 +18,7 @@ namespace CasualMeter.Tracker
         public string Name => Player.Name;
         public string FullName => Player.FullName;
         public PlayerClass Class => Player.Class;
-
+        public bool Healer => Player.IsHealer;
         public SynchronizedObservableCollection<SkillResult> SkillLog { get; private set; }
 
         public DateTime EncounterStartTime => Tracker.FirstAttack ?? DateTime.Now;
