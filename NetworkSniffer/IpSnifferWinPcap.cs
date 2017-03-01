@@ -59,7 +59,7 @@ namespace NetworkSniffer
             foreach (var device in interestingDevices)
             {
                 device.OnPacketArrival += device_OnPacketArrival;
-                device.Open(DeviceMode.Promiscuous, 1000);
+                device.Open(DeviceMode.Normal, 1000);
                 device.Filter = _filter;
                 if (BufferSize != null)
                 {

@@ -31,6 +31,7 @@ namespace CasualMeter
         private MessageFactory _messageFactory;
         private EntityTracker _entityTracker;
         private PlayerTracker _playerTracker;
+        private UserLogoTracker _userLogoTracker = new UserLogoTracker();
         private AbnormalityTracker _abnormalityTracker;
         private readonly AbnormalityStorage _abnormalityStorage = new AbnormalityStorage();
         private readonly Stopwatch _inactivityTimer = new Stopwatch();
@@ -429,7 +430,7 @@ namespace CasualMeter
                     _messageFactory.Region = Server.Region;
                     Logger.Info($"Logged in to server {Server.Name}.");
                     _teraData = BasicTeraData.DataForRegion(Server.Region);
-                    _entityTracker = new EntityTracker(_teraData.NpcDatabase);
+                    _entityTracker = new EntityTracker(_teraData.NpcDatabase, _userLogoTracker);
                     _playerTracker = new PlayerTracker(_entityTracker, BasicTeraData.Servers);
                     _abnormalityTracker = new AbnormalityTracker(_entityTracker, _playerTracker, _teraData.HotDotDatabase, _abnormalityStorage, CheckUpdate);
                     _entityTracker.Update(message);
@@ -446,6 +447,12 @@ namespace CasualMeter
                     new OpCodeNamer(Path.Combine(BasicTeraData.ResourceDirectory,
                         $"opcodes/{cVersion.Versions[0]}.txt"));
                 _messageFactory = new MessageFactory(opCodeNamer, Server.Region, cVersion.Versions[0]);
+                return;
+            }
+            var sGetUserList = message as S_GET_USER_LIST;
+            if (sGetUserList != null)
+            {
+                _userLogoTracker.SetUserList(sGetUserList);
                 return;
             }
         }

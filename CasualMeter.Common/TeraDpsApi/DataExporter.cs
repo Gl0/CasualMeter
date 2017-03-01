@@ -104,6 +104,7 @@ namespace CasualMeter.Common.TeraDpsApi
                 var buffs = abnormals.Get(user.Player);
                 teradpsUser.playerClass = user.Class.ToString();
                 teradpsUser.playerName = user.Name;
+                teradpsUser.guild = string.IsNullOrWhiteSpace(user.Player.GuildName) ? null : user.Player.GuildName;
                 teradpsUser.playerServer = SettingsHelper.Instance.BasicTeraData.Servers.GetServerName(user.Player.ServerId);
                 teradpsUser.playerAverageCritRate = Math.Round(100 * (double)filteredSkillog.Count(x => x.IsCritical && x.Damage > 0) / filteredSkillog.Count(x => x.Damage > 0)) + "";
                 teradpsUser.healCrit = user.Player.IsHealer ? Math.Round(100 * (double)filteredSkillog.Count(x => x.IsCritical && x.Heal > 0) / filteredSkillog.Count(x => x.Heal > 0)) + "" : null;
@@ -192,7 +193,7 @@ namespace CasualMeter.Common.TeraDpsApi
                 using (var client = new HttpClient())
                 {
                     client.Timeout = TimeSpan.FromSeconds(40);
-                    var response = client.GetAsync("http://moongourd.com/shared/servertime");
+                    var response = client.GetAsync("https://moongourd.com/shared/servertime");
                     var timediff = (response.Result.Headers.Date.Value.UtcDateTime.Ticks - DateTime.UtcNow.Ticks) / TimeSpan.TicksPerSecond;
                     teradpsData.encounterUnixEpoch += timediff;
                 }
@@ -219,7 +220,7 @@ namespace CasualMeter.Common.TeraDpsApi
                         //client.DefaultRequestHeaders.Add("X-Auth-Token", SettingsHelper.Instance.Settings.TeraDpsToken);
                         //client.DefaultRequestHeaders.Add("X-User-Id", SettingsHelper.Instance.Settings.TeraDpsUser);
 
-                        var response = client.PostAsync("http://moongourd.com/dpsmeter_data.php", new StringContent(
+                        var response = client.PostAsync("https://moongourd.com/dpsmeter_data.php", new StringContent(
                         json,
                         Encoding.UTF8,
                         "application/json")
