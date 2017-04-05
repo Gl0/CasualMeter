@@ -19,6 +19,7 @@ namespace CasualMeter.Common.TeraDpsApi
         public string playerTotalDamagePercentage;
         public string playerAverageCritRate;
         public List<KeyValuePair<string, string>> buffUptime = new List<KeyValuePair<string, string>>();
+        public List<List<int>> buffDetail = new List<List<int>>();
         public List<SkillLog> skillLog = new List<SkillLog>();
     }
 }

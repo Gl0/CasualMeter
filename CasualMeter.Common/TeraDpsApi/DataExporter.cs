@@ -87,6 +87,12 @@ namespace CasualMeter.Common.TeraDpsApi
                 teradpsData.debuffUptime.Add(new KeyValuePair<string, string>(
                     debuff.Key.Id+"", percentage+""
                     ));
+                foreach (var stack in debuff.Value.Stacks(firstTick, lastTick).OrderByDescending(x => x))
+                {
+                    percentage = debuff.Value.Duration(firstTick, lastTick, stack) * 100 / interval;
+                    if (percentage == 0) continue;
+                    teradpsData.debuffDetail.Add(new List<int>() { debuff.Key.Id, stack, (int)percentage });
+                }
             }
 
             foreach (var user in damageTracker.StatsByUser.OrderByDescending(x=>x.Dealt.Damage))
@@ -130,6 +136,12 @@ namespace CasualMeter.Common.TeraDpsApi
                     teradpsUser.buffUptime.Add(new KeyValuePair<string, string>(
                         buff.Key.Id + "", percentage + ""
                     ));
+                    foreach (var stack in buff.Value.Stacks(firstTick, lastTick).OrderByDescending(x => x))
+                    {
+                        percentage = buff.Value.Duration(firstTick, lastTick, stack) * 100 / interval;
+                        if (percentage == 0) continue;
+                        teradpsUser.buffDetail.Add(new List<int>() { buff.Key.Id, stack, (int)percentage });
+                    }
                 }
 
                 var aggregated = new List<AggregatedSkillResult>();

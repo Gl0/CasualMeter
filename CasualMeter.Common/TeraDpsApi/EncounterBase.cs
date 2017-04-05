@@ -14,6 +14,7 @@ namespace CasualMeter.Common.TeraDpsApi
         public string meterVersion = SettingsHelper.Instance.Version;
         public string partyDps;
         public List<KeyValuePair<string, string>> debuffUptime = new List<KeyValuePair<string, string>>();
+        public List<List<int>> debuffDetail = new List<List<int>>();
         public List<Members> members = new List<Members>();
 
     }
