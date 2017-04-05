@@ -217,7 +217,7 @@ namespace CasualMeter.Common.TeraDpsApi
                 Debug.WriteLine("Get server time error");
                 return;
             }
-            var json = JsonConvert.SerializeObject(teradpsData, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            var json = JsonConvert.SerializeObject(teradpsData, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, TypeNameHandling = TypeNameHandling.None });
             Task.Run(() => Send(entity, json, 3));
         }
 
