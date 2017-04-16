@@ -92,6 +92,12 @@ namespace CasualMeter.Tracker
             set { SetProperty(value); }
         }
 
+        public Player MeterPlayer
+        {
+            get { return GetProperty<Player>(); }
+            set { SetProperty(value); }
+        }
+
         public bool IsPrimaryTargetDead
         {
             get { return GetProperty(getDefault: () => false); }

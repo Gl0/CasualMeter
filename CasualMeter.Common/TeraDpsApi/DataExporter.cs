@@ -87,11 +87,15 @@ namespace CasualMeter.Common.TeraDpsApi
                 teradpsData.debuffUptime.Add(new KeyValuePair<string, string>(
                     debuff.Key.Id+"", percentage+""
                     ));
-                foreach (var stack in debuff.Value.Stacks(firstTick, lastTick).OrderByDescending(x => x))
+                var stacks = new List<List<int>> { new List<int> { 0, (int)percentage } };
+                var stackList = debuff.Value.Stacks(firstTick, lastTick).OrderBy(x => x);
+                teradpsData.debuffDetail.Add(new List<object> { debuff.Key.Id, stacks });
+                if (stackList.Any() && stackList.Max() == 1) continue;
+                foreach (var stack in stackList)
                 {
                     percentage = debuff.Value.Duration(firstTick, lastTick, stack) * 100 / interval;
                     if (percentage == 0) continue;
-                    teradpsData.debuffDetail.Add(new List<int>() { debuff.Key.Id, stack, (int)percentage });
+                    stacks.Add(new List<int> { stack, (int)percentage });
                 }
             }
 
@@ -136,11 +140,15 @@ namespace CasualMeter.Common.TeraDpsApi
                     teradpsUser.buffUptime.Add(new KeyValuePair<string, string>(
                         buff.Key.Id + "", percentage + ""
                     ));
-                    foreach (var stack in buff.Value.Stacks(firstTick, lastTick).OrderByDescending(x => x))
+                    var stacks = new List<List<int>> { new List<int> { 0, (int)percentage } };
+                    var stackList = buff.Value.Stacks(firstTick, lastTick).OrderBy(x => x);
+                    teradpsUser.buffDetail.Add(new List<object> { buff.Key.Id, stacks });
+                    if (stackList.Any() && stackList.Max() == 1) continue;
+                    foreach (var stack in buff.Value.Stacks(firstTick, lastTick).OrderBy(x => x))
                     {
                         percentage = buff.Value.Duration(firstTick, lastTick, stack) * 100 / interval;
                         if (percentage == 0) continue;
-                        teradpsUser.buffDetail.Add(new List<int>() { buff.Key.Id, stack, (int)percentage });
+                        stacks.Add(new List<int> { stack, (int)percentage });
                     }
                 }
 
@@ -171,6 +179,8 @@ namespace CasualMeter.Common.TeraDpsApi
 
                     teradpsUser.skillLog.Add(skillLog);
                 }
+                if (damageTracker.MeterPlayer == user.Player)
+                    teradpsData.uploader = teradpsData.members.Count.ToString();
                 teradpsData.members.Add(teradpsUser);
             }
 

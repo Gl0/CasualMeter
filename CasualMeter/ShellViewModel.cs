@@ -305,7 +305,8 @@ namespace CasualMeter
             {
                 OnlyBosses = OnlyBosses,
                 IgnoreOneshots = IgnoreOneshots,
-                Abnormals = _abnormalityStorage
+                Abnormals = _abnormalityStorage,
+                MeterPlayer = _playerTracker?.Me()
             };
         }
 
@@ -434,6 +435,7 @@ namespace CasualMeter
                     _playerTracker = new PlayerTracker(_entityTracker, BasicTeraData.Servers);
                     _abnormalityTracker = new AbnormalityTracker(_entityTracker, _playerTracker, _teraData.HotDotDatabase, _abnormalityStorage, CheckUpdate);
                     _entityTracker.Update(message);
+                    if (!DamageTracker.IsArchived) DamageTracker.MeterPlayer = _playerTracker.Me();
                     _needInit = false;
                 }
                 _abnormalityStorage.EndAll(message.Time.Ticks);
