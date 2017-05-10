@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -97,17 +98,17 @@ namespace CasualMeter.Common.TeraDpsApi
                         ws.Cells[j, 2, j, 7].Merge = true;
                         ws.Cells[j, 8].Value = "%";
                         ws.Cells[j, 2, j, 8].Style.Font.Bold = true;
-                        foreach (var buf in data.debuffUptime)
+                        foreach (var buf in data.debuffDetail)
                         {
                             j++;
-                            var hotdot = teraData.HotDotDatabase.Get(int.Parse(buf.Key));
+                            var hotdot = teraData.HotDotDatabase.Get((int)buf[0]);
                             ws.Cells[j, 1].Value = j - i - 3;
                             AddImage(ws, j, 1, BTD.Icons.GetBitmap(hotdot.IconName));
                             ws.Cells[j, 2].Value = hotdot.Name;
                             if (!string.IsNullOrEmpty(hotdot.Tooltip))
                                 ws.Cells[j, 2].AddComment("" + hotdot.Tooltip, "info");
                             ws.Cells[j, 2, j, 7].Merge = true;
-                            ws.Cells[j, 8].Value = double.Parse(buf.Value)/100;
+                            ws.Cells[j, 8].Value = (double)((List<List<int>>)buf[1])[0][1] / 100;
                             ws.Cells[j, 8].Style.Numberformat.Format = "0%";
                         }
                         border = ws.Cells[i + 3, 1, j, 8].Style.Border;
@@ -214,16 +215,16 @@ namespace CasualMeter.Common.TeraDpsApi
             ws.Cells[j, 2, j, 9].Merge = true;
             ws.Cells[j, 10].Value = "%";
             ws.Cells[j, 2, j, 10].Style.Font.Bold = true;
-            foreach (var buf in user.buffUptime)
+            foreach (var buf in user.buffDetail)
             {
                 j++;
-                var hotdot = teraData.HotDotDatabase.Get(int.Parse(buf.Key));
+                var hotdot = teraData.HotDotDatabase.Get((int)buf[0]);
                 ws.Cells[j, 1].Value = j - i - 3;
                 AddImage(ws, j, 1, BTD.Icons.GetBitmap(hotdot.IconName));
                 ws.Cells[j, 2].Value = hotdot.Name;
                 if (!string.IsNullOrEmpty(hotdot.Tooltip)) ws.Cells[j, 2].AddComment("" + hotdot.Tooltip, "info");
                 ws.Cells[j, 2, j, 9].Merge = true;
-                ws.Cells[j, 10].Value = double.Parse(buf.Value) / 100;
+                ws.Cells[j, 10].Value = (double)((List<List<int>>)buf[1])[0][1] / 100;
                 ws.Cells[j, 10].Style.Numberformat.Format = "0%";
                 if (!string.IsNullOrEmpty(hotdot.ItemName)) ws.Cells[j, 10].AddComment("" + hotdot.ItemName, "info");
             }

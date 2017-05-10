@@ -84,9 +84,6 @@ namespace CasualMeter.Common.TeraDpsApi
                 {
                     continue;
                 }
-                teradpsData.debuffUptime.Add(new KeyValuePair<string, string>(
-                    debuff.Key.Id+"", percentage+""
-                    ));
                 var stacks = new List<List<int>> { new List<int> { 0, (int)percentage } };
                 var stackList = debuff.Value.Stacks(firstTick, lastTick).OrderBy(x => x);
                 teradpsData.debuffDetail.Add(new List<object> { debuff.Key.Id, stacks });
@@ -137,9 +134,6 @@ namespace CasualMeter.Common.TeraDpsApi
                     {
                         continue;
                     }
-                    teradpsUser.buffUptime.Add(new KeyValuePair<string, string>(
-                        buff.Key.Id + "", percentage + ""
-                    ));
                     var stacks = new List<List<int>> { new List<int> { 0, (int)percentage } };
                     var stackList = buff.Value.Stacks(firstTick, lastTick).OrderBy(x => x);
                     teradpsUser.buffDetail.Add(new List<object> { buff.Key.Id, stacks });

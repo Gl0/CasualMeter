@@ -14,7 +14,6 @@ namespace CasualMeter.Common.TeraDpsApi
         public string meterVersion = SettingsHelper.Instance.Version;
         public string partyDps;
         public string uploader; //zero-based index of uploader in members list
-        public List<KeyValuePair<string, string>> debuffUptime = new List<KeyValuePair<string, string>>();
         public List<List<object>> debuffDetail = new List<List<object>>();
         public List<Members> members = new List<Members>();
 
