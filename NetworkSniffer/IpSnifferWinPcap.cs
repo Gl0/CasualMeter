@@ -36,7 +36,7 @@ namespace NetworkSniffer
                 $"Device {device.LinkType} {(device.Opened ? "Open" : "Closed")} {device.LastError}\r\n{device}");
         }
 
-        public int? BufferSize { get; set; }
+        public int? BufferSize { get; set; } = 1 << 24;
 
         protected override void SetEnabled(bool value)
         {
